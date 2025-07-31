@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Core.h"
-#include <vector> // 동적 배열
 #include "RTTI.h"
+
+#include <vector>
 
 class Actor;
 

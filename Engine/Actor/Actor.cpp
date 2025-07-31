@@ -55,7 +55,7 @@ Vector2 Actor::Position() const
 	return position;
 }
 
-void Actor::SetSortingOrder(unsigned int sortingOrder)
+void Actor::SetSortingOrder(SortingOrder sortingOrder)
 {
 	this->sortingOrder = sortingOrder;
 }

@@ -5,7 +5,19 @@
 #include "Math/Color.h"
 #include "RTTI.h"
 
-// 전방 선언
+// 화면에 그려질 정렬 순서 열거형 (높을수록 위)
+enum class SortingOrder : unsigned __int8
+{
+	None = -1,
+	Score,
+	Wall,
+	Enemy,
+	Item,
+	Dark,
+	Player,
+};
+
+// 레벨 전방 선언
 class Level;
 
 class ENGINE_API Actor : public RTTI
@@ -25,13 +37,8 @@ public:
 	virtual ~Actor();
 
 	// 이벤트 함수
-	// 객체 생애주기(Lifetime)에 1번만 호출됨 (초기화 목적)
 	virtual void BeginPlay();
-
-	// 프레임 마다 호출 (반복성 작업/지속성이 필요한 작업)
 	virtual void Tick(float deltaTime);
-
-	// 그리기 함수
 	virtual void Render();
 
 	// BeginPlay 호출 여부 확인
@@ -42,7 +49,7 @@ public:
 	Vector2 Position() const;
 
 	// Sorting Order 설정
-	void SetSortingOrder(unsigned int sortingOrder);
+	void SetSortingOrder(SortingOrder sortingOrder);
 
 	// 오너십 설정(Getter/Setter)
 	void SetOwner(Level* newOwner);
@@ -65,7 +72,7 @@ private:
 	bool hasBeganPlay = false;
 
 	// 정렬 순서
-	unsigned int sortingOrder = 0;
+	SortingOrder sortingOrder = SortingOrder::None;
 
 	// 소유 레벨(오너십)
 	Level* owner = nullptr;

@@ -7,30 +7,19 @@ Level::Level()
 
 Level::~Level()
 {
-	// 레벨에 있는 액터 메모리 해제
+	// 레벨에 배치된 모든 액터 메모리 해제
 	for (Actor* actor : actors)
 	{
-		// null 확인 후 액터 제거
-		//if (actor)
-		//{
-		//	// 삭제 및 메모리 정리
-		//	delete actor;
-		//	actor = nullptr;
-		//}
-
 		// 메모리 정리 함수
 		SafeDelete(actor);
 	}
 
-	// std::vector 정리
 	actors.clear();
 }
 
 void Level::AddActor(Actor* newActor)
 {
-	// 예외처리(중복 여부 확인) 필요함
-
-	actors.emplace_back(newActor);
+	actors.push_back(newActor);
 
 	// 오너십 설정
 	newActor->SetOwner(this);
@@ -63,7 +52,6 @@ void Level::Render()
 	// 그리기 전에 정렬 순서 기준으로 재배치(정렬)
 	SortActorsBySortingOrder();
 
-	// 그리기(Render Pass)
 	for (Actor* const actor : actors)
 	{
 		// 검사 (같은 위치에 정렬 순서 높은 액터가 있는지 확인)
@@ -102,8 +90,10 @@ void Level::Render()
 
 void Level::SortActorsBySortingOrder()
 {
+	// 현재 레벨에 배치된 모든 액터의 크기
 	int actorsSize = static_cast<int>(actors.size());
 
+	// 버블 정렬
 	for (int i = 0; i < actorsSize; ++i)
 	{
 		for (int j = 0; j < actorsSize - 1; ++j)

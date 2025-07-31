@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Level\Level.h"
 #include "Utils/Utils.h"
+#include "Math/Color.h"
 
 #include <iostream>
 #include <Windows.h>
@@ -47,12 +48,10 @@ Engine::~Engine()
 
 void Engine::Run()
 {
-	// 시스템 시간을 밀리초 단위로 알려줌
-	//float currentTime = timeGetTime();
-	LARGE_INTEGER currentTime;
-	LARGE_INTEGER previousTime;
+	LARGE_INTEGER currentTime; // 현재 시간
+	LARGE_INTEGER previousTime; // 이전 시간
 	QueryPerformanceCounter(&currentTime); // RDTSC
-	previousTime = currentTime;
+	previousTime = currentTime; 
 
 	// 하드웨어 시계의 정밀도(주파수) 가져오기.
 	// 나중에 초로 변환하기 위해
@@ -66,13 +65,12 @@ void Engine::Run()
 	// 타겟 한 프레임 시간.
 	float oneFrameTime = 1.0f / targetFrameRate;
 
-	// GameLoop
+	// 게임 루프
 	while (true)
 	{
 		// 엔진 종료 여부 확인.
 		if (isQuit)
 		{
-			// 루프 종료.
 			break;
 		}
 
@@ -85,20 +83,16 @@ void Engine::Run()
 			(currentTime.QuadPart - previousTime.QuadPart)
 			/ static_cast<float>(frequency.QuadPart);
 
-		// 입력은 최대한 빨리
+		// 입력 처리
 		input.ProcessInput();
 
 		// 고정 프레임.
 		if (deltaTime >= oneFrameTime)
 		{
+			// 엔진 이벤트 처리
 			BeginPlay();
 			Tick(deltaTime);
 			Render();
-
-			// 제목에 FPS 출력하기
-			char title[50]{};
-			sprintf_s(title, 50, "FPS: %f", (1.0f / deltaTime));
-			SetConsoleTitleA(title);
 
 			// 시간 업데이트
 			previousTime = currentTime;
@@ -108,8 +102,9 @@ void Engine::Run()
 		}
 	}
 
-	// 정리(텍스트 색상 원래대로 돌려놓기)
-	Utils::SetConsoleTextColor(FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN);
+	// 게임 루프 종료 후, 정리
+	// 콘솔 텍스트를 흰색으로 변경
+	Utils::SetConsoleTextColor(Color::White);
 }
 
 void Engine::AddLevel(Level* newLevel)
