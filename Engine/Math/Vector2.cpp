@@ -51,16 +51,3 @@ Vector2::operator COORD() const
 	coord.Y = static_cast<short>(this->y);
 	return coord;
 }
-
-const char* Vector2::ToString()
-{
-	// "(20, 30)" ·Î±× Âï±â
-	if (value != nullptr)
-	{
-		delete[] value;
-	}
-
-	value = new char[1024];
-	sprintf_s(value, 1024, "(%d, %d)", x, y);
-	return value;
-}

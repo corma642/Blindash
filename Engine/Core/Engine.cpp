@@ -1,10 +1,9 @@
 #include "Engine.h"
 #include "Level\Level.h"
 #include "Utils/Utils.h"
-#include "Math/Color.h"
+#include "Render/ScreenBuffer.h"
 
 #include <iostream>
-#include <Windows.h>
 
 // 정적 변수 초기화
 Engine* Engine::instance = nullptr;
@@ -34,11 +33,28 @@ Engine::Engine()
 	// 콘솔 커서 끄기
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
 
+	// 엔진 설정 로드
+	LoadEngineSettings();
+
+	// 이미지 버퍼 생성 / 콘솔에 보낼 버퍼 생성
+	Vector2 screenSize(settings.width, settings.height);
+	imageBuffer = new ImageBuffer((screenSize.x + 1) * screenSize.y + 1);
+
+	// 이미지 버퍼 초기화
+	ClearImageBuffer();
+
+	// 두 개의 버퍼 생성
+	renderTargets[0] = new ScreenBuffer(GetStdHandle(STD_OUTPUT_HANDLE), screenSize);
+	renderTargets[1] = new ScreenBuffer(screenSize);
+
+	// 버퍼 교환.
+	Present();
+
 	// 콘솔 창 이벤트 등록
 	SetConsoleCtrlHandler(ConsoleMessageProcedure, TRUE);
 
-	// 엔진 설정 로드
-	LoadEngineSettings();
+	// cls 호출.
+	system("cls");
 }
 
 Engine::~Engine()
@@ -51,7 +67,7 @@ void Engine::Run()
 	LARGE_INTEGER currentTime; // 현재 시간
 	LARGE_INTEGER previousTime; // 이전 시간
 	QueryPerformanceCounter(&currentTime); // RDTSC
-	previousTime = currentTime; 
+	previousTime = currentTime;
 
 	// 하드웨어 시계의 정밀도(주파수) 가져오기.
 	// 나중에 초로 변환하기 위해
@@ -94,6 +110,11 @@ void Engine::Run()
 			Tick(deltaTime);
 			Render();
 
+			// 제목에 FPS 출력하기
+			char title[50]{};
+			sprintf_s(title, 50, "FPS: %f", (1.0f / deltaTime));
+			SetConsoleTitleA(title);
+
 			// 시간 업데이트
 			previousTime = currentTime;
 
@@ -105,6 +126,23 @@ void Engine::Run()
 	// 게임 루프 종료 후, 정리
 	// 콘솔 텍스트를 흰색으로 변경
 	Utils::SetConsoleTextColor(Color::White);
+}
+
+void Engine::WriteToBuffer(const Vector2& position, const char image, Color color, int sortingOrder)
+{
+	// 기록할 문자 위치.
+	int index = (position.y * (settings.width)) + position.x;
+
+	// 현재 위치에 그려진 이미지의 정렬 순서가 더 높으면 반환
+	if (imageBuffer->sortingOrderArray[index] > sortingOrder)
+	{
+		return;
+	}
+
+	// 버퍼에 문자/색상 기록.
+	imageBuffer->charInfoArray[index].Char.AsciiChar = image;
+	imageBuffer->charInfoArray[index].Attributes = (WORD)color;
+	imageBuffer->sortingOrderArray[index] = sortingOrder;
 }
 
 void Engine::AddLevel(Level* newLevel)
@@ -122,6 +160,13 @@ void Engine::CleanUp()
 {
 	// 레벨 제거
 	SafeDelete(mainLevel);
+
+	// 문자 버퍼 삭제.
+	SafeDelete(imageBuffer);
+
+	// 렌더 타겟 삭제.
+	SafeDelete(renderTargets[0]);
+	SafeDelete(renderTargets[1]);
 }
 
 void Engine::Quit()
@@ -133,6 +178,10 @@ void Engine::Quit()
 Engine& Engine::Get()
 {
 	return *instance;
+}
+
+void Engine::OnInitialized()
+{
 }
 
 void Engine::BeginPlay()
@@ -153,15 +202,72 @@ void Engine::Tick(float deltaTime)
 	}
 }
 
+void Engine::Clear()
+{
+	ClearImageBuffer();
+	GetRenderer()->Clear();
+}
+
 void Engine::Render()
 {
-	Utils::SetConsoleTextColor(FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN);
+	// 화면 지우기.
+	Clear();
 
 	// 레벨 렌더링
 	if (mainLevel)
 	{
 		mainLevel->Render();
 	}
+
+	// 백버퍼에 데이터 쓰기.
+	GetRenderer()->Render(imageBuffer->charInfoArray);
+
+	// 버퍼 교환.
+	Present();
+}
+
+void Engine::Present()
+{
+	// 버퍼 교환.
+	SetConsoleActiveScreenBuffer(GetRenderer()->buffer);
+
+	// 인덱스 뒤집기. 1->0, 0->1.
+	currentRenderTargetIndex = 1 - currentRenderTargetIndex;
+}
+
+ScreenBuffer* Engine::GetRenderer() const
+{
+	return renderTargets[currentRenderTargetIndex];
+}
+
+void Engine::ClearImageBuffer()
+{
+	// 글자 버퍼 덮어쓰기.
+	for (int y = 0; y < settings.height; ++y)
+	{
+		for (int x = 0; x < settings.width; ++x)
+		{
+			int index = (y * (settings.width)) + x;
+			CHAR_INFO& buffer = imageBuffer->charInfoArray[index];
+			buffer.Char.AsciiChar = ' ';
+			buffer.Attributes = 0;
+			imageBuffer->sortingOrderArray[index] = -1;
+		}
+
+		// 각 줄 끝에 개행 문자 추가.
+		int index = (y * (settings.width)) + settings.width;
+		CHAR_INFO& buffer = imageBuffer->charInfoArray[index];
+		buffer.Char.AsciiChar = '\n';
+		buffer.Attributes = 0;
+		imageBuffer->sortingOrderArray[index] = -1;
+	}
+
+	// 마지막에 널 문자 추가.
+	int index = (settings.width) * settings.height + 1;
+	CHAR_INFO& buffer = imageBuffer->charInfoArray[index];
+	buffer.Char.AsciiChar = '\0';
+	buffer.Attributes = 0;
+	imageBuffer->sortingOrderArray[index] = -1;
 }
 
 void Engine::LoadEngineSettings()
@@ -210,17 +316,17 @@ void Engine::LoadEngineSettings()
 		sscanf_s(token, "%s", header, 10);
 
 		// 헤더 문자열 비교
-		if (strcmp(header, "width") == 0)
+		if (strcmp(header, "framerate") == 0)
+		{
+			sscanf_s(token, "framerate = %f", &settings.framerate);
+		}
+		else if (strcmp(header, "width") == 0)
 		{
 			sscanf_s(token, "width = %d", &settings.width);
 		}
 		else if (strcmp(header, "height") == 0)
 		{
 			sscanf_s(token, "height = %d", &settings.height);
-		}
-		else if (strcmp(header, "framerate") == 0)
-		{
-			sscanf_s(token, "framerate = %f", &settings.framerate);
 		}
 
 		// 그 다음줄 분리

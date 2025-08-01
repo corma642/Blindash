@@ -1,5 +1,6 @@
 #include "GameLevel.h"
 #include "Math/Vector2.h"
+#include "Engine.h"
 
 #include "Actor/Player.h"
 #include "Actor/Enemy.h"
@@ -67,10 +68,6 @@ void GameLevel::ReadStageFile(const char* fileName)
 			// 다음 줄로 넘기면서, x 좌표 초기화
 			pos.x = 0;
 			++pos.y;
-
-			// Todo: 테스트용도. 객체 생성 시, 나중에 삭제해야 함
-			std::cout << "\n";
-
 			continue;
 		}
 
@@ -78,15 +75,19 @@ void GameLevel::ReadStageFile(const char* fileName)
 		switch (mapCharacter)
 		{
 		case '8':
+			//AddActor(new Dark(pos));
 			AddActor(new Wall(pos));
 			break;
 		case '.':
+			//AddActor(new Dark(pos));
 			AddActor(new Score(pos));
 			break;
 		case 'D':
+			//AddActor(new Player(pos));
 			AddActor(new Player(pos));
 			break;
 		case 'M':
+			//AddActor(new Dark(pos));
 			AddActor(new Enemy(pos));
 			break;
 		}

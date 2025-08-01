@@ -25,14 +25,7 @@ void Actor::Tick(float deltaTiem)
 
 void Actor::Render()
 {
-	// 커서 이동
-	Utils::SetConsolePosition(position);
-
-	// 텍스트 색상 설정
-	Utils::SetConsoleTextColor(color);
-
-	// 그리기
-	std::cout << image;
+	Engine::Get().WriteToBuffer(position, image, color, static_cast<int>(sortingOrder));
 }
 
 void Actor::SetPosition(const Vector2& newPosition)

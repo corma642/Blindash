@@ -8,10 +8,11 @@
 // 화면에 그려질 정렬 순서 열거형 (높을수록 위)
 enum class SortingOrder : unsigned __int8
 {
-	None = -1,
+	None = 0,
 	Score,
 	Wall,
 	Item,
+	Enemy,
 	Dark,
 	Player,
 };
