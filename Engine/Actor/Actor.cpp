@@ -30,6 +30,10 @@ void Actor::Render()
 
 void Actor::SetPosition(const Vector2& newPosition)
 {
+	// 예외 처리 ()
+
+
+	// 같으면 업데이트 안함
 	if (position == newPosition)
 	{
 		return;

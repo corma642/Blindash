@@ -2,6 +2,8 @@
 #include "Input.h"
 #include "Engine.h"
 
+#include <iostream>
+
 Player::Player(const Vector2& position)
 	: super('D', Color::Yellow, position)
 {
@@ -18,31 +20,14 @@ void Player::Tick(float deltaTime)
 		return;
 	}
 
-	if (Input::Get().GetKey('A'))
-	{
-		Vector2 position = Position();
-		position.x--;
-		SetPosition(position);
-	}
+	if (Input::Get().GetKey('A')) xPos -= xMoveSpeed * deltaTime;
+	if (Input::Get().GetKey('D')) xPos += xMoveSpeed * deltaTime;
+	if (Input::Get().GetKey('W')) yPos -= yMoveSpeed * deltaTime;
+	if (Input::Get().GetKey('S')) yPos += yMoveSpeed * deltaTime;
 
-	if (Input::Get().GetKey('D'))
-	{
-		Vector2 position = Position();
-		position.x++;
-		SetPosition(position);
-	}
+	Vector2 position = Position();
+	position.x = static_cast<int>(xPos);
+	position.y = static_cast<int>(yPos);
 
-	if (Input::Get().GetKey('W'))
-	{
-		Vector2 position = Position();
-		position.y--;
-		SetPosition(position);
-	}
-
-	if (Input::Get().GetKey('S'))
-	{
-		Vector2 position = Position();
-		position.y++;
-		SetPosition(position);
-	}
+	SetPosition(position);
 }
