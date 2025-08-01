@@ -1,6 +1,12 @@
 #include "GameLevel.h"
 #include "Math/Vector2.h"
 
+#include "Actor/Player.h"
+#include "Actor/Enemy.h"
+#include "Actor/Wall.h"
+#include "Actor/Dark.h"
+#include "Actor/Score.h"
+
 #include <iostream>
 
 GameLevel::GameLevel()
@@ -22,7 +28,7 @@ void GameLevel::ReadStageFile(const char* fileName)
 	FILE* mapFile = nullptr;
 	fopen_s(&mapFile, filePath, "rb");
 
-	// 예외처리
+	// 예외 처리
 	if (!mapFile)
 	{
 		std::cout << "맵 파일 읽기 실패: " << fileName << "\n";
@@ -71,38 +77,20 @@ void GameLevel::ReadStageFile(const char* fileName)
 		// 각 문자별 처리
 		switch (mapCharacter)
 		{
-		case '8': // Wall 액터 생성
-			//AddActor(new Wall(pos));
-			std::cout << "8";
+		case '8':
+			AddActor(new Wall(pos));
 			break;
-		case '.': // Score 액터 생성
-			// Ground 액터 생성
-			//AddActor(new Ground(pos));
-			std::cout << ".";
+		case '.':
+			AddActor(new Score(pos));
 			break;
 		case 'D':
-			// Ground도 같이 생성
-			//AddActor(new Ground(pos));
-
-			// Player 액터 생성
-			//AddActor(new Player(pos));
-			std::cout << "D";
+			AddActor(new Player(pos));
 			break;
-		//case 'b':
-		//	// 땅도 같이 생성
-		//	AddActor(new Ground(pos));
-
-		//	// Box 액터 생성
-		//	AddActor(new Box(pos));
-		//	break;
-		//case 't':
-		//	// Target 액터 생성
-		//	AddActor(new Target(pos));
-
-		//	// 목표 점수 증가 처리
-		//	targetScore++;
-		//	break;
+		case 'M':
+			AddActor(new Enemy(pos));
+			break;
 		}
+
 		// x좌표 증가 처리
 		pos.x++;
 	}

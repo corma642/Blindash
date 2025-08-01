@@ -29,6 +29,5 @@ private:
 protected:
 	// 레벨에 배치된 모든 액터를 관리하는 배열
 	std::vector<Actor*> actors;
-
 };
 

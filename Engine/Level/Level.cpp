@@ -50,7 +50,7 @@ void Level::Tick(float deltaTime)
 void Level::Render()
 {
 	// 그리기 전에 정렬 순서 기준으로 재배치(정렬)
-	SortActorsBySortingOrder();
+	//SortActorsBySortingOrder();
 
 	for (Actor* const actor : actors)
 	{

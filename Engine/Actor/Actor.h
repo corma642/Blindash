@@ -11,7 +11,6 @@ enum class SortingOrder : unsigned __int8
 	None = -1,
 	Score,
 	Wall,
-	Enemy,
 	Item,
 	Dark,
 	Player,
