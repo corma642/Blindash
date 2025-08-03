@@ -23,10 +23,6 @@ public:
 	virtual void Tick(float deltaTime);
 	virtual void Render();
 
-private:
-	// 정렬 순서대로 액터 정렬하는 함수
-	void SortActorsBySortingOrder();
-
 protected:
 	// 레벨에 배치된 모든 액터를 관리하는 배열
 	std::vector<Actor*> actors;

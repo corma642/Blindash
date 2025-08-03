@@ -20,6 +20,75 @@ void GameLevel::Render()
 	super::Render();
 }
 
+bool GameLevel::CanMove(const class Actor* inActor, const Vector2& currentPosition, const Vector2& nextPosition)
+{
+	// 이 액터의 종류 확인
+	SortingOrder sortingOrder = SortingOrder::None;
+	sortingOrder = inActor->GetSortingOrder();
+
+	// 플레이어의 이동
+	if (sortingOrder == SortingOrder::Player)
+	{
+		for (const auto& i : actors)
+		{
+			if (i->Position() != nextPosition)
+			{
+				continue;
+			}
+
+			SortingOrder nextPosSortingOrder = i->GetSortingOrder();
+
+			switch (nextPosSortingOrder)
+			{
+			case SortingOrder::Score:
+				// Todo: 플레이어 점수 획득 로직 구현해야 함
+				return true;
+
+			case SortingOrder::Wall:
+				return false;
+
+			case SortingOrder::Item:
+				// Todo: 플레이어 아이템 획득 로직 구현해야 함
+				return true;
+
+			case SortingOrder::Enemy:
+				// Todo: 플레이어 적 충돌 로직 구현해야 함
+				return false;
+			}
+		}
+	}
+
+	// 적의 이동
+	if (sortingOrder == SortingOrder::Enemy)
+	{
+		for (const auto& i : actors)
+		{
+			if (i->Position() != nextPosition)
+			{
+				continue;
+			}
+
+			SortingOrder nextPosSortingOrder = i->GetSortingOrder();
+
+			switch (nextPosSortingOrder)
+			{
+			case SortingOrder::Wall:
+				return false;
+
+			case SortingOrder::Enemy:
+				return false;
+
+			case SortingOrder::Player:
+				// Todo: 적 플레이어 충돌 로직 구현해야 함
+				return true;
+			}
+		}
+	}
+
+	// 여기 왔다는 것은 빈 공간이라는 의미
+	return true;
+}
+
 void GameLevel::ReadStageFile(const char* fileName)
 {
 	// 최종 에셋 경로 완성

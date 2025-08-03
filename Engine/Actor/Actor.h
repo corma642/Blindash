@@ -50,6 +50,7 @@ public:
 
 	// Sorting Order 설정
 	void SetSortingOrder(SortingOrder sortingOrder);
+	SortingOrder GetSortingOrder() const;
 
 	// 오너십 설정(Getter/Setter)
 	void SetOwner(Level* newOwner);

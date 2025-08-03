@@ -179,6 +179,7 @@
   <ItemGroup>
     <ClInclude Include="Actor\Dark.h" />
     <ClInclude Include="Actor\Enemy.h" />
+    <ClInclude Include="Interface\GameLevelInterface.h" />
     <ClInclude Include="Level\GameLevel.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Actor\Player.h" />
