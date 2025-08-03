@@ -10,6 +10,7 @@ int main()
 	std::ios::sync_with_stdio(false);
 	std::cout.tie(nullptr);
 
+	// ±ê Ä¿¹Ô Å×½ºÆ®
 	Game game;
 	game.Run();
 }
