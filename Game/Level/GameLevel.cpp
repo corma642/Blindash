@@ -20,12 +20,28 @@ void GameLevel::Render()
 {
 	super::Render();
 
+	if (isPlayerDead)
+	{
+		// 게임 오버 문구 출력
+		char buffer[20]{ "[ GAME OVER... ]" };
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 1, stagePos.y), buffer);
+
+		// 게임 종료
+		Engine::Get().Quit();
+	}
+
 	// 클리어까지 남은 스코어 출력
 	PrintScore();
 }
 
-bool GameLevel::CanMove(const class Actor* inActor, const Vector2& currentPosition, const Vector2& nextPosition)
+bool GameLevel::CanMove(class Actor* inActor, const Vector2& currentPosition, const Vector2& nextPosition)
 {
+	// 맵의 범위를 벗어나면 이동 실패
+	if (nextPosition.x < 0 || nextPosition.y < 0 || nextPosition.x >= stagePos.x || nextPosition.y >= stagePos.y)
+	{
+		return false;
+	}
+
 	// 이 액터의 종류 확인
 	SortingOrder sortingOrder = SortingOrder::None;
 	sortingOrder = inActor->GetSortingOrder();
@@ -56,7 +72,7 @@ bool GameLevel::CanMove(const class Actor* inActor, const Vector2& currentPositi
 				return true;
 
 			case SortingOrder::Enemy:
-				// Todo: 플레이어 적 충돌 로직 구현해야 함
+				ProcessPlayerAndEnemy(inActor);
 				return false;
 			}
 		}
@@ -84,7 +100,7 @@ bool GameLevel::CanMove(const class Actor* inActor, const Vector2& currentPositi
 				return false;
 
 			case SortingOrder::Player:
-				// Todo: 적 플레이어 충돌 로직 구현해야 함
+				ProcessPlayerAndEnemy(i);
 				return true;
 
 			default:
@@ -186,10 +202,18 @@ void GameLevel::PrintScore()
 	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 1, 1), buffer);
 }
 
-void GameLevel::ProcessPlayerAndScore(Actor* inActor)
+void GameLevel::ProcessPlayerAndScore(Actor* inScore)
 {
 	// 남은 점수 1 뺴줌
 	remainingScore--;
 
-	inActor->Destroy();
+	inScore->Destroy();
+}
+
+void GameLevel::ProcessPlayerAndEnemy(Actor* inPlayer)
+{
+	// 죽음 처리 (게임 종료)
+	isPlayerDead = true;
+
+	inPlayer->Destroy();
 }

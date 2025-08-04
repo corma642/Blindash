@@ -87,6 +87,9 @@ void Engine::Run()
 		// 엔진 종료 여부 확인.
 		if (isQuit)
 		{
+			// 대략 3초 정지
+			Sleep(3000);
+
 			break;
 		}
 
@@ -143,7 +146,7 @@ void Engine::WriteToBuffer(const Vector2& position, const char* image, Color col
 	{
 		// 기록할 문자 위치
 		int index = (position.y * (settings.width)) + position.x + i;
-	
+
 		// 현재 위치에 그려진 이미지의 정렬 순서가 더 높으면 반환
 		if (imageBuffer->sortingOrderArray[index] > sortingOrder)
 		{

@@ -14,7 +14,7 @@ public:
 
 	// 이동 가능 여부를 반환하는 함수
 	virtual bool CanMove(
-		const class Actor* inActor,
+		class Actor* inActor,
 		const Vector2& currentPosition,
 		const Vector2& nextPosition) override;
 
@@ -25,7 +25,10 @@ private:
 	void PrintScore();
 
 	// 플레이어와 점수의 처리
-	void ProcessPlayerAndScore(Actor* inActor);
+	void ProcessPlayerAndScore(Actor* inScore);
+
+	// 플레이어와 적의 처리
+	void ProcessPlayerAndEnemy(Actor* inPlayer);
 
 private:
 	// 클리어까지 남은 점수(스코어)
@@ -33,4 +36,7 @@ private:
 
 	// 맵의 x, y값 좌표
 	Vector2 stagePos = Vector2::Zero;
+
+	// 플레이어의 죽음 처리를 위한 변수
+	bool isPlayerDead = false;
 };

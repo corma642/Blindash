@@ -11,7 +11,7 @@ Enemy::Enemy(const Vector2 position)
 	SetSortingOrder(SortingOrder::Enemy);
 
 	// 타이머 설정 (적 이동 시간 설정)
-	enemyMoveTimer.SetTargetTime(Utils::RandomFloat(0.25f, 0.5f));
+	enemyMoveTimer.SetTargetTime(Utils::RandomFloat(0.1f, 0.3f));
 }
 
 void Enemy::BeginPlay()
@@ -43,7 +43,7 @@ void Enemy::Tick(float deltaTime)
 
 	// 타이머 정리
 	enemyMoveTimer.Reset();
-	enemyMoveTimer.SetTargetTime(Utils::RandomFloat(0.25f, 0.5f));
+	enemyMoveTimer.SetTargetTime(Utils::RandomFloat(0.1f, 0.3f));
 
 	// 랜덤 이동 방향 구하기
 	MoveDirection moveDirection = static_cast<MoveDirection>(Utils::Random(1, 4));
@@ -87,21 +87,21 @@ void Enemy::GetRandomMoveDirection(MoveDirection& inMoveDirection, Vector2& inMo
 	case 1:
 		inMoveDirection = MoveDirection::Up;
 		inMoveValue.x = 0;
-		inMoveValue.y = -1;
+		inMoveValue.y = Utils::Random(-1, -2);
 		break;
 	case 2:
 		inMoveDirection = MoveDirection::Right;
-		inMoveValue.x = 1;
+		inMoveValue.x = Utils::Random(1, 2);
 		inMoveValue.y = 0;
 		break;
 	case 3:
 		inMoveDirection = MoveDirection::Down;
 		inMoveValue.x = 0;
-		inMoveValue.y = 1;
+		inMoveValue.y = Utils::Random(1, 2);
 		break;
 	case 4:
 		inMoveDirection = MoveDirection::Left;
-		inMoveValue.x = -1;
+		inMoveValue.x = Utils::Random(-1, -2);
 		inMoveValue.y = 0;
 		break;
 	}

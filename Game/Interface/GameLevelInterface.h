@@ -10,7 +10,7 @@ class IGameLevelInterface
 public:
 	// 해당 위치로 이동할 수 있는지 검사하는 함수
 	virtual bool CanMove(
-		const class Actor* inActor,
+		class Actor* inActor,
 		const Vector2& currentPosition,
 		const Vector2& nextPosition) = 0;
 };
