@@ -47,4 +47,19 @@ namespace Utils
 	{
 		SetConsoleTextColor(static_cast<WORD>(color));
 	}
+
+	// 랜덤 생성 함수
+	inline int Random(int min, int max)
+	{
+		// max와 min의 차이 구하기
+		int diff = (max - min) + 1;
+		return ((diff * rand()) / (RAND_MAX + 1)) + min;
+	}
+
+	inline float RandomFloat(float min, float max)
+	{
+		// 0 ~ 1 사이의 난수 구하기
+		float random = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+		return random * (max - min) + min;
+	}
 }

@@ -10,6 +10,8 @@ Player::Player(const Vector2& position)
 	: super('D', Color::Yellow, position)
 {
 	SetSortingOrder(SortingOrder::Player);
+	xPos = static_cast<float>(position.x);
+	yPos = static_cast<float>(position.y);
 }
 
 void Player::BeginPlay()
@@ -23,7 +25,7 @@ void Player::BeginPlay()
 
 	if (!gameLevelInterface)
 	{
-		std::cout << "Can not cast to owner level to ICanPlayerMove" << "\n";
+		std::cout << "Player: Can not cast to owner level to ICanPlayerMove" << "\n";
 	}
 }
 
@@ -39,41 +41,40 @@ void Player::Tick(float deltaTime)
 
 	Vector2 position = Position();
 
-	if (Input::Get().GetKey('A'))
-	{
-		PlayerMove(false, false, true, deltaTime);
-	}
-	if (Input::Get().GetKeyUp('A'))
+	if (Input::Get().GetKeyDown('A'))
 	{
 		PlayerMove(false, false, false, deltaTime);
 	}
+	else if (Input::Get().GetKey('A'))
+	{
+		PlayerMove(false, false, true, deltaTime);
+	}
 
-	if (Input::Get().GetKey('D'))
+	if (Input::Get().GetKeyDown('D'))
+	{
+		PlayerMove(false, true, false, deltaTime);
+	}
+	else if (Input::Get().GetKey('D'))
 	{
 		PlayerMove(false, true, true, deltaTime);
 	}
-	if (Input::Get().GetKeyUp('D'))
-	{
 
-		PlayerMove(false, true, false, deltaTime);
-	}
-
-	if (Input::Get().GetKey('W'))
-	{
-		PlayerMove(true, false, true, deltaTime);
-	}
-	if (Input::Get().GetKeyUp('W'))
+	if (Input::Get().GetKeyDown('W'))
 	{
 		PlayerMove(true, false, false, deltaTime);
 	}
-
-	if (Input::Get().GetKey('S'))
+	else if (Input::Get().GetKey('W'))
 	{
-		PlayerMove(true, true, true, deltaTime);
+		PlayerMove(true, false, true, deltaTime);
 	}
-	if (Input::Get().GetKeyUp('S'))
+
+	if (Input::Get().GetKeyDown('S'))
 	{
 		PlayerMove(true, true, false, deltaTime);
+	}
+	else if (Input::Get().GetKey('S'))
+	{
+		PlayerMove(true, true, true, deltaTime);
 	}
 }
 
@@ -92,19 +93,18 @@ void Player::PlayerMove(const bool xy, const bool sign, const bool sequence, flo
 		{
 			SetPosition(position);
 		}
-
-		xPos = 0.0f;
-		yPos = 0.0f;
+		xPos = static_cast<float>(position.x);
+		yPos = static_cast<float>(position.y);
 	}
 	else
 	{
-		if (xy && sign) static_cast<int>(yPos += xMoveSpeed * deltaTime);
-		else if (xy && !sign) static_cast<int>(yPos -= xMoveSpeed * deltaTime);
-		else if (!xy && sign) static_cast<int>(xPos += xMoveSpeed * deltaTime);
-		else if (!xy && !sign) static_cast<int>(xPos -= xMoveSpeed * deltaTime);
+		if (xy && sign) yPos += yMoveSpeed * deltaTime;
+		else if (xy && !sign) yPos -= yMoveSpeed * deltaTime;
+		else if (!xy && sign) xPos += xMoveSpeed * deltaTime;
+		else if (!xy && !sign) xPos -= xMoveSpeed * deltaTime;
 
-		position.x += static_cast<int>(xPos);
-		position.y += static_cast<int>(yPos);
+		position.x = static_cast<int>(xPos);
+		position.y = static_cast<int>(yPos);
 
 		if (gameLevelInterface->CanMove(this, Position(), position))
 		{
@@ -112,8 +112,8 @@ void Player::PlayerMove(const bool xy, const bool sign, const bool sequence, flo
 		}
 		else
 		{
-			if (xy && sign) static_cast<int>(yPos -= xMoveSpeed * deltaTime);
-			else if (xy && !sign) static_cast<int>(yPos += xMoveSpeed * deltaTime);
+			if (xy && sign) static_cast<int>(yPos -= yMoveSpeed * deltaTime);
+			else if (xy && !sign) static_cast<int>(yPos += yMoveSpeed * deltaTime);
 			else if (!xy && sign) static_cast<int>(xPos -= xMoveSpeed * deltaTime);
 			else if (!xy && !sign) static_cast<int>(xPos += xMoveSpeed * deltaTime);
 		}
