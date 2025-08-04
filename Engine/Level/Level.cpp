@@ -3,6 +3,7 @@
 #include "Utils/Utils.h"
 
 #include <algorithm>
+#include <vector>
 
 Level::Level()
 {
@@ -75,8 +76,22 @@ void Level::Render()
 			continue;
 		}
 
-		actor->Render();
+		// 이 액터가 렌더해도 되는 액터인지 판별
+		if (ShouldRenderActor(actor))
+		{
+			actor->Render();
+		}
 	}
+}
+
+Vector2 Level::GetPlayerPos() const
+{
+	return playerPos;
+}
+
+void Level::SetPlayerPos(const Vector2& newPosition)
+{
+	playerPos = newPosition;
 }
 
 void Level::ProcessAddAndDestroyActors()
@@ -115,4 +130,33 @@ void Level::ProcessAddAndDestroyActors()
 
 	// 추가 배열 초기화
 	addRequstedActors.clear();
+}
+
+bool Level::ShouldRenderActor(Actor* inActor)
+{
+	// 암흑 액터가 아닌 경우에는 바로 성공 리턴
+	if (inActor->GetSortingOrder() != SortingOrder::Dark)
+	{
+		return true;
+	}
+
+	// 렌더하려는 암흑 액터의 위치
+	Vector2 position = inActor->Position();
+
+	// 플레이어와 암흑 액터간의 맨해튼 거리 구하기
+	if (IsWithinEllipticalZone(position, playerPos)) return false;
+	
+	return true;
+}
+
+bool Level::IsWithinEllipticalZone(const Vector2& playerPos, const Vector2& actorPos) const
+{
+	float deltaX = static_cast<float>(abs(actorPos.x - playerPos.x));
+	float deltaY = static_cast<float>(abs(actorPos.y - playerPos.y));
+
+	// 정규화된 타원 방정식: (x/a)² + (y/b)² <= 1
+	float normalizedDistance = (deltaX * deltaX) / (playerVisionWidth * playerVisionWidth) +
+		(deltaY * deltaY) / (playerVisionHeight * playerVisionHeight);
+
+	return normalizedDistance <= 1.0f;
 }

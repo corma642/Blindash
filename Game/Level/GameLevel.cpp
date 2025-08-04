@@ -13,7 +13,7 @@
 
 GameLevel::GameLevel()
 {
-	ReadStageFile("Stage_02.txt");
+	ReadStageFile("Stage_01.txt");
 }
 
 void GameLevel::Render()
@@ -165,27 +165,36 @@ void GameLevel::ReadStageFile(const char* fileName)
 		switch (mapCharacter)
 		{
 		case '8':
-			//AddActor(new Dark(pos));
+			if (useDark) AddActor(new Dark(stagePos));
 			AddActor(new Wall(stagePos));
 			break;
+
 		case '.':
-			//AddActor(new Dark(pos));
+			if (useDark) AddActor(new Dark(stagePos));
 			AddActor(new Score(stagePos));
 			remainingScore++;
 			break;
+
 		case 'D':
-			//AddActor(new Player(pos));
+			if (useDark) AddActor(new Dark(stagePos));
 			AddActor(new Player(stagePos));
+			playerPos = stagePos;
 			break;
+
 		case 'M':
-			//AddActor(new Dark(pos));
+			if (useDark) AddActor(new Dark(stagePos));
 			AddActor(new Enemy(stagePos));
+			break;
+
+		default:
+			if (useDark) AddActor(new Dark(stagePos));
 			break;
 		}
 
 		// x좌표 증가 처리
 		stagePos.x++;
 	}
+	if (useDark) AddActor(new Dark(stagePos));
 
 	// 버퍼 해제
 	delete[] buffer;
@@ -206,6 +215,7 @@ void GameLevel::ProcessPlayerAndScore(Actor* inScore)
 {
 	// 남은 점수 1 뺴줌
 	remainingScore--;
+	inScore->SetSortingOrder(SortingOrder::None);
 
 	inScore->Destroy();
 }

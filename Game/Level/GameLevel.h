@@ -39,4 +39,7 @@ private:
 
 	// 플레이어의 죽음 처리를 위한 변수
 	bool isPlayerDead = false;
+
+	// Todo: 암흑 시야 on/off 옵션
+	bool useDark = true;
 };

@@ -92,6 +92,9 @@ void Player::PlayerMove(const bool xy, const bool sign, const bool sequence, flo
 		if (gameLevelInterface->CanMove(this, Position(), position))
 		{
 			SetPosition(position);
+
+			// 레벨의 플레이어 위치 갱신
+			GetOwner()->SetPlayerPos(position);
 		}
 		xPos = static_cast<float>(position.x);
 		yPos = static_cast<float>(position.y);
@@ -109,6 +112,9 @@ void Player::PlayerMove(const bool xy, const bool sign, const bool sequence, flo
 		if (gameLevelInterface->CanMove(this, Position(), position))
 		{
 			SetPosition(position);
+
+			// 레벨의 플레이어 위치 갱신
+			GetOwner()->SetPlayerPos(position);
 		}
 		else
 		{
