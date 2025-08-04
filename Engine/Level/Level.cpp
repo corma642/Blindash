@@ -21,16 +21,26 @@ Level::~Level()
 
 void Level::AddActor(Actor* newActor)
 {
-	actors.push_back(newActor);
+	// 대기 배열에 추가
+	addRequstedActors.push_back(newActor);
+}
 
-	// 오너십 설정
-	newActor->SetOwner(this);
+void Level::DestroyActor(Actor* destroyedActor)
+{
+	// 대기 배열에 추가
+	destroyRequstedActors.push_back(destroyedActor);
 }
 
 void Level::BeginPlay()
 {
 	for (Actor* const actor : actors)
 	{
+		// 삭제 요청된 액터의 경우 수행하지 않음
+		if (actor->isExpired)
+		{
+			continue;
+		}
+
 		// 이미 BeginPlay가 호출된 개체는 건너뛰기
 		if (actor->HasBeganPlay())
 		{
@@ -45,6 +55,12 @@ void Level::Tick(float deltaTime)
 {
 	for (Actor* const actor : actors)
 	{
+		// 삭제 요청된 액터의 경우 수행하지 않음
+		if (actor->isExpired)
+		{
+			continue;
+		}
+
 		actor->Tick(deltaTime);
 	}
 }
@@ -53,6 +69,50 @@ void Level::Render()
 {
 	for (Actor* const actor : actors)
 	{
+		// 삭제 요청된 액터의 경우 수행하지 않음
+		if (actor->isExpired)
+		{
+			continue;
+		}
+
 		actor->Render();
 	}
+}
+
+void Level::ProcessAddAndDestroyActors()
+{
+	// actors 배열에서 제외 처리
+	for (auto it = actors.begin(); it != actors.end();)
+	{
+		// 삭제 요청된 액터인지 확인 후 배열에서 제외
+		if ((*it)->isExpired)
+		{
+			// erase 함수를 사용하면 iterator가 무효화되기 때문에
+			// 반환되는 값을 저장해야 함
+			it = actors.erase(it);
+			continue;
+		}
+
+		++it;
+	}
+
+	// destroyRequstedActors 배열을 순회하며 액터 delete
+	for (auto* actor : destroyRequstedActors)
+	{
+		// 메모리 해제
+		SafeDelete(actor);
+	}
+
+	// 삭제 배열 초기화
+	destroyRequstedActors.clear();
+
+	// addRequstedActors 배열을 순회하며 새로운 액터 추가
+	for (auto* const actor : addRequstedActors)
+	{
+		actors.push_back(actor);
+		actor->SetOwner(this);
+	}
+
+	// 추가 배열 초기화
+	addRequstedActors.clear();
 }

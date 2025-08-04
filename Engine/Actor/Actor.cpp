@@ -1,17 +1,24 @@
 #include "Actor.h"
 #include "Utils/Utils.h"
 #include "Engine.h"
+#include "Level/Level.h"
 
 #include <Windows.h>
 #include <iostream>
 
-Actor::Actor(const char image, Color color, const Vector2& position)
-	: image(image), color(color), position(position)
+Actor::Actor(const char* image, Color color, const Vector2& position)
+	: color(color), position(position)
 {
+	width = static_cast<int>(strlen(image));
+
+	this->image = new char[width + 1];
+	
+	strcpy_s(this->image, width + 1, image);
 }
 
 Actor::~Actor()
 {
+	SafeDeleteArray(image);
 }
 
 void Actor::BeginPlay()
@@ -66,6 +73,19 @@ void Actor::SetOwner(Level* newOwner)
 Level* Actor::GetOwner() const
 {
 	return owner;
+}
+
+void Actor::Destroy()
+{
+	// 증복 삭제 방지
+	if (isExpired)
+	{
+		return;
+	}
+
+	// 삭제 요청되었다고 설정
+	isExpired = true;
+	owner->DestroyActor(this);
 }
 
 void Actor::QuitGame()

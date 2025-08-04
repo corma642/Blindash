@@ -29,7 +29,7 @@ class ENGINE_API Actor : public RTTI
 
 public:
 	Actor(
-		const char image = ' ',
+		const char* image = "",
 		Color color = Color::White,
 		const Vector2& position = Vector2::Zero
 	);
@@ -56,6 +56,9 @@ public:
 	void SetOwner(Level* newOwner);
 	Level* GetOwner() const;
 
+	// 객체 삭제 함수
+	void Destroy();
+
 	// 게임 종료 요청 함수
 	void QuitGame();
 
@@ -64,7 +67,10 @@ private:
 	Vector2 position;
 
 	// 그릴 값
-	char image = ' ';
+	char* image = nullptr;
+
+	// 문자열 길이
+	int width = 0;
 
 	// 텍스트 색상 값
 	Color color;
@@ -74,6 +80,9 @@ private:
 
 	// 정렬 순서
 	SortingOrder sortingOrder = SortingOrder::None;
+
+	// 액터가 삭제 요청되었는지 확인하는 변수
+	bool isExpired = false;
 
 	// 소유 레벨(오너십)
 	Level* owner = nullptr;

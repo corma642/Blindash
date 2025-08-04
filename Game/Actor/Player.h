@@ -21,7 +21,7 @@ private:
 
 private:
 	// 플레이어 이동 속도 (단위: 초당 유닛)
-	float xMoveSpeed = 5.0f;
+	float xMoveSpeed = 7.0f;
 	float yMoveSpeed = 3.0f;
 
 	// 좌표가 정수이기 때문에 사이 값 계산을 위해 float 변수 선언

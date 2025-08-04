@@ -1,6 +1,7 @@
 #include "GameLevel.h"
 #include "Math/Vector2.h"
 #include "Engine.h"
+#include "Utils/Utils.h"
 
 #include "Actor/Player.h"
 #include "Actor/Enemy.h"
@@ -12,12 +13,15 @@
 
 GameLevel::GameLevel()
 {
-	ReadStageFile("Stage_01.txt");
+	ReadStageFile("Stage_02.txt");
 }
 
 void GameLevel::Render()
 {
 	super::Render();
+
+	// 클리어까지 남은 스코어 출력
+	PrintScore();
 }
 
 bool GameLevel::CanMove(const class Actor* inActor, const Vector2& currentPosition, const Vector2& nextPosition)
@@ -41,7 +45,7 @@ bool GameLevel::CanMove(const class Actor* inActor, const Vector2& currentPositi
 			switch (nextPosSortingOrder)
 			{
 			case SortingOrder::Score:
-				// Todo: 플레이어 점수 획득 로직 구현해야 함
+				ProcessPlayerAndScore(i);
 				return true;
 
 			case SortingOrder::Wall:
@@ -69,17 +73,21 @@ bool GameLevel::CanMove(const class Actor* inActor, const Vector2& currentPositi
 			}
 
 			SortingOrder nextPosSortingOrder = i->GetSortingOrder();
+			if (nextPosSortingOrder == SortingOrder::Dark)
+			{
+				continue;
+			}
 
 			switch (nextPosSortingOrder)
 			{
 			case SortingOrder::Wall:
 				return false;
 
-			case SortingOrder::Enemy:
-				return false;
-
 			case SortingOrder::Player:
 				// Todo: 적 플레이어 충돌 로직 구현해야 함
+				return true;
+
+			default:
 				return true;
 			}
 		}
@@ -122,9 +130,6 @@ void GameLevel::ReadStageFile(const char* fileName)
 	// 문자열 길이 값
 	int size = static_cast<int>(readSize);
 
-	// x, y값 좌표
-	Vector2 pos;
-
 	// 문자 배열 순회
 	while (index < size)
 	{
@@ -135,8 +140,8 @@ void GameLevel::ReadStageFile(const char* fileName)
 		if (mapCharacter == '\n')
 		{
 			// 다음 줄로 넘기면서, x 좌표 초기화
-			pos.x = 0;
-			++pos.y;
+			stagePos.x = 0;
+			++stagePos.y;
 			continue;
 		}
 
@@ -145,24 +150,25 @@ void GameLevel::ReadStageFile(const char* fileName)
 		{
 		case '8':
 			//AddActor(new Dark(pos));
-			AddActor(new Wall(pos));
+			AddActor(new Wall(stagePos));
 			break;
 		case '.':
 			//AddActor(new Dark(pos));
-			AddActor(new Score(pos));
+			AddActor(new Score(stagePos));
+			remainingScore++;
 			break;
 		case 'D':
 			//AddActor(new Player(pos));
-			AddActor(new Player(pos));
+			AddActor(new Player(stagePos));
 			break;
 		case 'M':
 			//AddActor(new Dark(pos));
-			AddActor(new Enemy(pos));
+			AddActor(new Enemy(stagePos));
 			break;
 		}
 
 		// x좌표 증가 처리
-		pos.x++;
+		stagePos.x++;
 	}
 
 	// 버퍼 해제
@@ -170,4 +176,20 @@ void GameLevel::ReadStageFile(const char* fileName)
 
 	// 파일 닫기
 	fclose(mapFile);
+}
+
+void GameLevel::PrintScore()
+{
+	char buffer[20]{};
+	sprintf_s(buffer, 20, "남은 점수: %d", remainingScore);
+
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 1, 1), buffer);
+}
+
+void GameLevel::ProcessPlayerAndScore(Actor* inActor)
+{
+	// 남은 점수 1 뺴줌
+	remainingScore--;
+
+	inActor->Destroy();
 }

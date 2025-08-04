@@ -63,7 +63,7 @@ public:
 	// 문자 그리기 요청 함수.
 	void WriteToBuffer(
 		const Vector2& position,
-		const char image,
+		const char* image,
 		Color color = Color::White,
 		int sortingOrder = 0
 	);

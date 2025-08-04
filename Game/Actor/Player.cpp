@@ -7,7 +7,7 @@
 #include <iostream>
 
 Player::Player(const Vector2& position)
-	: super('D', Color::Yellow, position)
+	: super("D", Color::Yellow, position)
 {
 	SetSortingOrder(SortingOrder::Player);
 	xPos = static_cast<float>(position.x);

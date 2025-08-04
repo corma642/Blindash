@@ -20,5 +20,17 @@ public:
 
 private:
 	void ReadStageFile(const char* fileName);
-};
 
+	// 남은 스코어 출력 함수
+	void PrintScore();
+
+	// 플레이어와 점수의 처리
+	void ProcessPlayerAndScore(Actor* inActor);
+
+private:
+	// 클리어까지 남은 점수(스코어)
+	int remainingScore = 0;
+
+	// 맵의 x, y값 좌표
+	Vector2 stagePos = Vector2::Zero;
+};

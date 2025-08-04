@@ -120,6 +120,12 @@ void Engine::Run()
 
 			// 현재 프레임의 키 입력을 기록
 			input.SavePreviousKeyStates();
+
+			// 이전 프레임에 추가 및 삭제 요청된 액터 처리
+			if (mainLevel)
+			{
+				mainLevel->ProcessAddAndDestroyActors();
+			}
 		}
 	}
 
@@ -128,21 +134,27 @@ void Engine::Run()
 	Utils::SetConsoleTextColor(Color::White);
 }
 
-void Engine::WriteToBuffer(const Vector2& position, const char image, Color color, int sortingOrder)
+void Engine::WriteToBuffer(const Vector2& position, const char* image, Color color, int sortingOrder)
 {
-	// 기록할 문자 위치.
-	int index = (position.y * (settings.width)) + position.x;
+	// 문자열 길이.
+	int length = static_cast<int>(strlen(image));
 
-	// 현재 위치에 그려진 이미지의 정렬 순서가 더 높으면 반환
-	if (imageBuffer->sortingOrderArray[index] > sortingOrder)
+	for (int i = 0; i < length; ++i)
 	{
-		return;
-	}
+		// 기록할 문자 위치
+		int index = (position.y * (settings.width)) + position.x + i;
+	
+		// 현재 위치에 그려진 이미지의 정렬 순서가 더 높으면 반환
+		if (imageBuffer->sortingOrderArray[index] > sortingOrder)
+		{
+			return;
+		}
 
-	// 버퍼에 문자/색상 기록.
-	imageBuffer->charInfoArray[index].Char.AsciiChar = image;
-	imageBuffer->charInfoArray[index].Attributes = (WORD)color;
-	imageBuffer->sortingOrderArray[index] = sortingOrder;
+		// 버퍼에 문자/색상 기록.
+		imageBuffer->charInfoArray[index].Char.AsciiChar = image[i];
+		imageBuffer->charInfoArray[index].Attributes = (WORD)color;
+		imageBuffer->sortingOrderArray[index] = sortingOrder;
+	}
 }
 
 void Engine::AddLevel(Level* newLevel)
