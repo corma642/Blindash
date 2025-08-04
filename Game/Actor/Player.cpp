@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Level/Level.h"
 #include "Interface/GameLevelInterface.h"
+#include "Utils/Timer.h"
 
 #include <iostream>
 
@@ -10,8 +11,10 @@ Player::Player(const Vector2& position)
 	: super("D", Color::Yellow, position)
 {
 	SetSortingOrder(SortingOrder::Player);
-	xPos = static_cast<float>(position.x);
-	yPos = static_cast<float>(position.y);
+
+	// 타이머 설정 (반복/연속 이동 제한 시간 설정)
+	playerRepeatMoveXTimer.SetTargetTime(xMoveThreshold);
+	playerRepeatMoveYTimer.SetTargetTime(yMoveThreshold);
 }
 
 void Player::BeginPlay()
@@ -39,89 +42,113 @@ void Player::Tick(float deltaTime)
 		return;
 	}
 
-	Vector2 position = Position();
-
 	if (Input::Get().GetKeyDown('A'))
 	{
-		PlayerMove(false, false, false, deltaTime);
+		HorizontalMove(false, false);
 	}
 	else if (Input::Get().GetKey('A'))
 	{
-		PlayerMove(false, false, true, deltaTime);
+		playerRepeatMoveXTimer.Tick(deltaTime);
+		HorizontalMove(false, true);
+	}
+	else if (Input::Get().GetKeyUp('A'))
+	{
+		playerRepeatMoveXTimer.Reset();
 	}
 
 	if (Input::Get().GetKeyDown('D'))
 	{
-		PlayerMove(false, true, false, deltaTime);
+		HorizontalMove(true, false);
 	}
 	else if (Input::Get().GetKey('D'))
 	{
-		PlayerMove(false, true, true, deltaTime);
+		playerRepeatMoveXTimer.Tick(deltaTime);
+		HorizontalMove(true, true);
+	}
+	else if (Input::Get().GetKeyUp('D'))
+	{
+		playerRepeatMoveXTimer.Reset();
 	}
 
 	if (Input::Get().GetKeyDown('W'))
 	{
-		PlayerMove(true, false, false, deltaTime);
+		VerticalMove(false, false);
 	}
 	else if (Input::Get().GetKey('W'))
 	{
-		PlayerMove(true, false, true, deltaTime);
+		playerRepeatMoveYTimer.Tick(deltaTime);
+		VerticalMove(false, true);
+	}
+	else if (Input::Get().GetKeyUp('W'))
+	{
+		playerRepeatMoveYTimer.Reset();
 	}
 
 	if (Input::Get().GetKeyDown('S'))
 	{
-		PlayerMove(true, true, false, deltaTime);
+		VerticalMove(true, false);
 	}
 	else if (Input::Get().GetKey('S'))
 	{
-		PlayerMove(true, true, true, deltaTime);
+		playerRepeatMoveYTimer.Tick(deltaTime);
+		VerticalMove(true, true);
+	}
+	else if (Input::Get().GetKeyUp('S'))
+	{
+		playerRepeatMoveYTimer.Reset();
 	}
 }
 
-void Player::PlayerMove(const bool xy, const bool sign, const bool sequence, float deltaTime)
+void Player::HorizontalMove(bool sign, bool isRepeat)
 {
 	Vector2 position = Position();
 
-	if (!sequence)
+	// 반복/연속 이동
+	if (isRepeat)
 	{
-		if (xy && sign) position.y++;
-		else if (xy && !sign) position.y--;
-		else if (!xy && sign) position.x++;
-		else if (!xy && !sign) position.x--;
-
-		if (gameLevelInterface->CanMove(this, Position(), position))
+		if (!playerRepeatMoveXTimer.IsTimeout())
 		{
-			SetPosition(position);
-
-			// 레벨의 플레이어 위치 갱신
-			GetOwner()->SetPlayerPos(position);
+			return;
 		}
-		xPos = static_cast<float>(position.x);
-		yPos = static_cast<float>(position.y);
+
+		playerRepeatMoveXTimer.Reset();
 	}
-	else
+
+	if (sign) position.x++;
+	else position.x--;
+
+	if (gameLevelInterface->CanMove(this, Position(), position))
 	{
-		if (xy && sign) yPos += yMoveSpeed * deltaTime;
-		else if (xy && !sign) yPos -= yMoveSpeed * deltaTime;
-		else if (!xy && sign) xPos += xMoveSpeed * deltaTime;
-		else if (!xy && !sign) xPos -= xMoveSpeed * deltaTime;
+		SetPosition(position);
 
-		position.x = static_cast<int>(xPos);
-		position.y = static_cast<int>(yPos);
+		// 레벨의 플레이어 위치 갱신
+		GetOwner()->SetPlayerPos(position);
+	}
+}
 
-		if (gameLevelInterface->CanMove(this, Position(), position))
+void Player::VerticalMove(bool sign, bool isRepeat)
+{
+	Vector2 position = Position();
+
+	// 반복/연속 이동
+	if (isRepeat)
+	{
+		if (!playerRepeatMoveYTimer.IsTimeout())
 		{
-			SetPosition(position);
+			return;
+		}
 
-			// 레벨의 플레이어 위치 갱신
-			GetOwner()->SetPlayerPos(position);
-		}
-		else
-		{
-			if (xy && sign) static_cast<int>(yPos -= yMoveSpeed * deltaTime);
-			else if (xy && !sign) static_cast<int>(yPos += yMoveSpeed * deltaTime);
-			else if (!xy && sign) static_cast<int>(xPos -= xMoveSpeed * deltaTime);
-			else if (!xy && !sign) static_cast<int>(xPos += xMoveSpeed * deltaTime);
-		}
+		playerRepeatMoveYTimer.Reset();
+	}
+
+	if (sign) position.y++;
+	else position.y--;
+
+	if (gameLevelInterface->CanMove(this, Position(), position))
+	{
+		SetPosition(position);
+
+		// 레벨의 플레이어 위치 갱신
+		GetOwner()->SetPlayerPos(position);
 	}
 }

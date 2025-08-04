@@ -41,5 +41,5 @@ private:
 	bool isPlayerDead = false;
 
 	// Todo: 암흑 시야 on/off 옵션
-	bool useDark = true;
+	bool useDark = false;
 };
