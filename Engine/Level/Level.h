@@ -27,8 +27,28 @@ public:
 	virtual void Render();
 
 	// 플레이어 위치 Getter/Setter
-	Vector2 GetPlayerPos() const;
-	void SetPlayerPos(const Vector2& newPosition);
+	FORCEINLINE Vector2 GetPlayerPos() const { return playerPos; }
+	FORCEINLINE void SetPlayerPos(const Vector2& newPosition) { playerPos = newPosition; }
+
+	// 플레이어 시야 반경 Getter/Setter
+	FORCEINLINE float GetPlayerVisionWidth() const { return playerVisionWidth; }
+	FORCEINLINE void SetPlayerVisionWidth(const float newPlayerVisionWidth)
+	{
+		playerVisionWidth = newPlayerVisionWidth;
+	}
+
+	FORCEINLINE float GetPlayerVisionHeight() const { return playerVisionHeight; }
+	FORCEINLINE void SetPlayerVisionHeight(const float newPlayerVisionHeight)
+	{
+		playerVisionHeight = newPlayerVisionHeight;
+	}
+
+	// GlobalVision Getter/Setter
+	FORCEINLINE bool GetEnableGlobalVision() const { return bEnableGlobalVision; }
+	FORCEINLINE void SetEnableGlobalVision(const bool inEnableGlobalVision)
+	{
+		bEnableGlobalVision = inEnableGlobalVision;
+	}
 
 	// 추가 및 삭제 요청된 액터를 처리하는 함수
 	void ProcessAddAndDestroyActors();
@@ -50,11 +70,15 @@ protected:
 	// 삭제 요청된 액터를 관리하는 배열
 	std::vector<Actor*> destroyRequstedActors;
 
+protected:
 	// 플레이어의 위치
 	Vector2 playerPos = Vector2::Zero;
 
 	// 플레이어의 시야 (보이는 거리)
 	float playerVisionWidth = 4.0f;
 	float playerVisionHeight = 3.0f;
+
+	// GlobalVision 활성화 여부
+	bool bEnableGlobalVision = false;
 };
 

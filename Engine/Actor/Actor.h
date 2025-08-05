@@ -46,15 +46,21 @@ public:
 
 	// 위치 설정 및 값 읽는 함수
 	void SetPosition(const Vector2& newPosition);
-	Vector2 Position() const;
+	FORCEINLINE Vector2 Position() const { return position; }
 
-	// Sorting Order 설정
-	void SetSortingOrder(SortingOrder sortingOrder);
-	SortingOrder GetSortingOrder() const;
+	// 정렬 순서 Getter/Setter
+	FORCEINLINE SortingOrder GetSortingOrder() const { return sortingOrder; ; }
+	FORCEINLINE void SetSortingOrder(SortingOrder sortingOrder)
+	{
+		this->sortingOrder = sortingOrder;
+	}
 
-	// 오너십 설정(Getter/Setter)
-	void SetOwner(Level* newOwner);
-	Level* GetOwner() const;
+	// 오너십 Getter/Setter
+	FORCEINLINE Level* GetOwner() const { return owner; }
+	FORCEINLINE void SetOwner(Level* newOwner) { owner = newOwner; }
+
+	// 액터 색상 변경 함수
+	FORCEINLINE void SetColor(const Color newColor) { color = newColor; }
 
 	// 객체 삭제 함수
 	void Destroy();

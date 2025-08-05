@@ -47,34 +47,6 @@ void Actor::SetPosition(const Vector2& newPosition)
 	position = newPosition;
 }
 
-Vector2 Actor::Position() const
-{
-	return position;
-}
-
-void Actor::SetSortingOrder(SortingOrder sortingOrder)
-{
-	this->sortingOrder = sortingOrder;
-}
-
-SortingOrder Actor::GetSortingOrder() const
-{
-	return sortingOrder;
-}
-
-void Actor::SetOwner(Level* newOwner)
-{
-	if (newOwner)
-	{
-		owner = newOwner;
-	}
-}
-
-Level* Actor::GetOwner() const
-{
-	return owner;
-}
-
 void Actor::Destroy()
 {
 	// 증복 삭제 방지

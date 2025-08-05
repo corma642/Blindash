@@ -42,6 +42,125 @@ void Player::Tick(float deltaTime)
 		return;
 	}
 
+	// 이동 입력 처리
+	PlayerMovement(deltaTime);
+
+	// GlobalVision
+	ItemActivateGlobalVision(deltaTime);
+
+	// 슈퍼 모드
+	ItemActivateSuperMode(deltaTime);
+}
+
+void Player::ItemExpandVisionRange()
+{
+	Level* OwningLevel = GetOwner();
+	if (!OwningLevel)
+	{
+		__debugbreak();
+	}
+
+	float currentPlayerVistionWidth = OwningLevel->GetPlayerVisionWidth();
+	float currentPlayerVistionHeight = OwningLevel->GetPlayerVisionHeight();
+
+	OwningLevel->SetPlayerVisionWidth(currentPlayerVistionWidth + 1.0f);
+	OwningLevel->SetPlayerVisionHeight(currentPlayerVistionHeight + 0.5f);
+}
+
+void Player::ItemActivateGlobalVision(float deltaTime)
+{
+	// GlobalVision 활성화 상태에서 추가 활성화
+	if (bStartGlobalVision && bEnableGlobalVision)
+	{
+		// 지속 시간 초기화
+		GlobalVisionTimer.Reset();
+		bStartGlobalVision = false;
+	}
+
+	// GlobalVision 비활성화 상태에서 GlobalVision 활성화
+	if (bStartGlobalVision && !bEnableGlobalVision)
+	{
+		GlobalVisionTimer.SetTargetTime(GlobalVisionTime);
+		bStartGlobalVision = false;
+		bEnableGlobalVision = true;
+
+		Level* OwningLevel = GetOwner();
+		if (!OwningLevel)
+		{
+			__debugbreak();
+		}
+		OwningLevel->SetEnableGlobalVision(true);
+	}
+
+	// GlobalVision 활성화
+	if (bEnableGlobalVision)
+	{
+		GlobalVisionTimer.Tick(deltaTime);
+
+		if (GlobalVisionTimer.IsTimeout())
+		{
+			GlobalVisionTimer.Reset();
+			bEnableGlobalVision = false;
+
+			Level* OwningLevel = GetOwner();
+			if (!OwningLevel)
+			{
+				__debugbreak();
+			}
+			OwningLevel->SetEnableGlobalVision(false);
+		}
+	}
+}
+
+void Player::ItemActivateSuperMode(float deltaTime)
+{
+	// 슈퍼 모드 활성화 상태에서 추가 활성화
+	if (bStartSuperMode && bEnableSuperMode)
+	{
+		// 지속 시간 초기화
+		SuperModeTimer.Reset();
+		bStartSuperMode = false;
+	}
+
+	// 슈퍼 모드 비활성화 상태에서 슈퍼 모드 활성화
+	if (bStartSuperMode && !bEnableSuperMode)
+	{
+		SuperModeTimer.SetTargetTime(SuperModeTime);
+		bStartSuperMode = false;
+		bEnableSuperMode = true;
+		SetColor(Color::Green);
+
+		Level* OwningLevel = GetOwner();
+		if (!OwningLevel)
+		{
+			__debugbreak();
+		}
+		OwningLevel->SetEnableGlobalVision(true);
+	}
+
+	// 슈퍼 모드 활성화
+	if (bEnableSuperMode)
+	{
+		SuperModeTimer.Tick(deltaTime);
+
+		if (SuperModeTimer.IsTimeout())
+		{
+			SuperModeTimer.Reset();
+			bEnableSuperMode = false;
+			SetColor(Color::Yellow);
+
+			Level* OwningLevel = GetOwner();
+			if (!OwningLevel)
+			{
+				__debugbreak();
+			}
+			OwningLevel->SetEnableGlobalVision(false);
+		}
+	}
+}
+
+void Player::PlayerMovement(float deltaTime)
+{
 	if (Input::Get().GetKeyDown('A'))
 	{
 		HorizontalMove(false, false);

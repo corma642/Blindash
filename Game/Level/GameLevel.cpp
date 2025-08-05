@@ -13,7 +13,12 @@
 
 GameLevel::GameLevel()
 {
-	ReadStageFile("Stage_01.txt");
+	ReadStageFile("Stage_03.txt");
+}
+
+void GameLevel::Tick(float deltaTime)
+{
+	super::Tick(deltaTime);
 }
 
 void GameLevel::Render()
@@ -24,7 +29,7 @@ void GameLevel::Render()
 	{
 		// 게임 오버 문구 출력
 		char buffer[20]{ "[ GAME OVER... ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 1, stagePos.y), buffer);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::Red);
 
 		// 게임 종료
 		Engine::Get().Quit();
@@ -61,18 +66,14 @@ bool GameLevel::CanMove(class Actor* inActor, const Vector2& currentPosition, co
 			switch (nextPosSortingOrder)
 			{
 			case SortingOrder::Score:
-				ProcessPlayerAndScore(i);
+				ProcessPlayerAndScore(inActor, i);
 				return true;
 
 			case SortingOrder::Wall:
 				return false;
 
-			case SortingOrder::Item:
-				// Todo: 플레이어 아이템 획득 로직 구현해야 함
-				return true;
-
 			case SortingOrder::Enemy:
-				ProcessPlayerAndEnemy(inActor);
+				ProcessPlayerAndEnemy(inActor, i);
 				return false;
 			}
 		}
@@ -100,7 +101,7 @@ bool GameLevel::CanMove(class Actor* inActor, const Vector2& currentPosition, co
 				return false;
 
 			case SortingOrder::Player:
-				ProcessPlayerAndEnemy(i);
+				ProcessPlayerAndEnemy(i, inActor);
 				return true;
 
 			default:
@@ -208,22 +209,68 @@ void GameLevel::PrintScore()
 	char buffer[20]{};
 	sprintf_s(buffer, 20, "남은 점수: %d", remainingScore);
 
-	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 1, 1), buffer);
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 1), buffer);
 }
 
-void GameLevel::ProcessPlayerAndScore(Actor* inScore)
+void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 {
-	// 남은 점수 1 뺴줌
+	// 점수 처리
 	remainingScore--;
 	inScore->SetSortingOrder(SortingOrder::None);
+
+	// 아이템 발동 처리
+	// 20% 확률로 아이템 발동
+	int itemActivation = Utils::Random(1, 100);
+	if (itemActivation <= 20)
+	{
+		Player* player = inPlayer->As<Player>();
+		if (!player)
+		{
+			__debugbreak();
+		}
+
+		// 발동할 아이템 능력 랜덤 뽑기
+		int itemType = Utils::Random(1, 6);
+
+		switch (itemType)
+		{
+		case 1:
+		case 2:
+		case 3:
+			player->ItemExpandVisionRange();
+			break;
+
+		case 4:
+		case 5:
+			player->StartGlobalVision();
+			break;
+
+		case 6:
+			player->StartSuperMode();
+			break;
+		}
+	}
 
 	inScore->Destroy();
 }
 
-void GameLevel::ProcessPlayerAndEnemy(Actor* inPlayer)
+void GameLevel::ProcessPlayerAndEnemy(Actor* inPlayer, Actor* inEnemy)
 {
-	// 죽음 처리 (게임 종료)
-	isPlayerDead = true;
+	Player* player = inPlayer->As<Player>();
+	if (!player)
+	{
+		__debugbreak();
+	}
 
-	inPlayer->Destroy();
+	// 플레이어가 슈퍼 모드이면, 몬스터 처치
+	if (player->GetEnableSuperMode())
+	{
+		inEnemy->Destroy();
+	}
+	else
+	{
+		// 죽음 처리 (게임 종료)
+		isPlayerDead = true;
+		inPlayer->Destroy();
+	}
 }

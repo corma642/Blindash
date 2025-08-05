@@ -84,16 +84,6 @@ void Level::Render()
 	}
 }
 
-Vector2 Level::GetPlayerPos() const
-{
-	return playerPos;
-}
-
-void Level::SetPlayerPos(const Vector2& newPosition)
-{
-	playerPos = newPosition;
-}
-
 void Level::ProcessAddAndDestroyActors()
 {
 	// actors 배열에서 제외 처리
@@ -140,10 +130,16 @@ bool Level::ShouldRenderActor(Actor* inActor)
 		return true;
 	}
 
+	// 플레이어가 GlobalVision 상태라면 항상 암흑 액터 무시
+	if (GetEnableGlobalVision())
+	{
+		return false;
+	}
+
 	// 렌더하려는 암흑 액터의 위치
 	Vector2 position = inActor->Position();
 
-	// 플레이어와 암흑 액터간의 맨해튼 거리 구하기
+	// 플레이어와 암흑 액터간의 거리 구하기
 	if (IsWithinEllipticalZone(position, playerPos)) return false;
 	
 	return true;

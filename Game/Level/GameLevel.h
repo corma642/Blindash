@@ -2,6 +2,7 @@
 
 #include "Level/Level.h"
 #include "Interface/GameLevelInterface.h"
+#include "Utils/Timer.h"
 
 class GameLevel : public Level, public IGameLevelInterface
 {
@@ -10,6 +11,7 @@ class GameLevel : public Level, public IGameLevelInterface
 public:
 	GameLevel();
 
+	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
 
 	// 이동 가능 여부를 반환하는 함수
@@ -25,10 +27,10 @@ private:
 	void PrintScore();
 
 	// 플레이어와 점수의 처리
-	void ProcessPlayerAndScore(Actor* inScore);
+	void ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore);
 
 	// 플레이어와 적의 처리
-	void ProcessPlayerAndEnemy(Actor* inPlayer);
+	void ProcessPlayerAndEnemy(Actor* inPlayer, Actor* inEnemy);
 
 private:
 	// 클리어까지 남은 점수(스코어)
@@ -41,5 +43,5 @@ private:
 	bool isPlayerDead = false;
 
 	// Todo: 암흑 시야 on/off 옵션
-	bool useDark = false;
+	bool useDark = true;
 };
