@@ -109,6 +109,12 @@ protected:
 	// 엔진 설정 로드 함수
 	void LoadEngineSettings();
 
+	// 스테이지 클리어 시, 수행할 로직
+	virtual void OnStageClear() = 0;
+
+	// 게임 오버 시, 수행할 로직
+	virtual void OnGameOver() = 0;
+
 protected:
 	// 엔진 종료 플래그.
 	bool isQuit = false;

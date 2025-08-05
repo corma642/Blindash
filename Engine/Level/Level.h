@@ -53,6 +53,12 @@ public:
 	// 추가 및 삭제 요청된 액터를 처리하는 함수
 	void ProcessAddAndDestroyActors();
 
+	// 스테이지를 클리어했는지 확인하는 함수
+	bool StageClear();
+
+	// 플레이어가 사망했는지 확인하는 함수
+	bool GameOver();
+
 protected:
 	// 렌더해도 되는 액터인지 판별하는 함수
 	bool ShouldRenderActor(Actor* inActor);
@@ -80,5 +86,11 @@ protected:
 
 	// GlobalVision 활성화 여부
 	bool bEnableGlobalVision = false;
+
+	// 스테이지 클리어 여부
+	bool IsStageClear = false;
+
+	// 플레이어의 죽음 여부
+	bool isPlayerDead = false;
 };
 

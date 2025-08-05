@@ -33,14 +33,14 @@ private:
 	void ProcessPlayerAndEnemy(Actor* inPlayer, Actor* inEnemy);
 
 private:
-	// 클리어까지 남은 점수(스코어)
+	// 현재 점수
+	int currentScore = 0;
+
+	// 클리어까지 남은 점수
 	int remainingScore = 0;
 
 	// 맵의 x, y값 좌표
 	Vector2 stagePos = Vector2::Zero;
-
-	// 플레이어의 죽음 처리를 위한 변수
-	bool isPlayerDead = false;
 
 	// Todo: 암흑 시야 on/off 옵션
 	bool useDark = true;

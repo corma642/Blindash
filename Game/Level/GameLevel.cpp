@@ -1,7 +1,8 @@
 #include "GameLevel.h"
 #include "Math/Vector2.h"
-#include "Engine.h"
+#include "Game/Game.h"
 #include "Utils/Utils.h"
+#include "Level/Level.h"
 
 #include "Actor/Player.h"
 #include "Actor/Enemy.h"
@@ -25,14 +26,21 @@ void GameLevel::Render()
 {
 	super::Render();
 
-	if (isPlayerDead)
+	if (IsStageClear)
+	{
+		// 스테이지 클리어 문구 출력
+		char buffer1[25]{ "[ !- GAME CLEAR -! ]" };
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 1), buffer1, Color::Green);
+
+		// 다음 스테이지 바로가기 문구 출력
+		char buffer2[50]{ "[ 다음 스테이지 바로가기 >> \"Enter\" ]" };
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer2, Color::White);
+	}
+	else if (isPlayerDead)
 	{
 		// 게임 오버 문구 출력
-		char buffer[20]{ "[ GAME OVER... ]" };
+		char buffer[20]{ "[ YOU DIED... ]" };
 		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::Red);
-
-		// 게임 종료
-		Engine::Get().Quit();
 	}
 
 	// 클리어까지 남은 스코어 출력
@@ -206,16 +214,19 @@ void GameLevel::ReadStageFile(const char* fileName)
 
 void GameLevel::PrintScore()
 {
-	char buffer[20]{};
-	sprintf_s(buffer, 20, "남은 점수: %d", remainingScore);
+	char buffer1[20]{};
+	char buffer2[20]{};
+	sprintf_s(buffer1, 20, "현재 점수: %d", currentScore);
+	sprintf_s(buffer2, 20, "남은 점수: %d", remainingScore);
 
-	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 1), buffer);
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 1), buffer1, currentScore > 0 ? Color::Green : Color::White);
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 2), buffer2, Color::White);
 }
 
 void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 {
 	// 점수 처리
-	remainingScore--;
+	currentScore++;
 	inScore->SetSortingOrder(SortingOrder::None);
 
 	// 아이템 발동 처리
@@ -252,6 +263,12 @@ void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 	}
 
 	inScore->Destroy();
+
+	// 게임 클리어 여부 확인
+	if (currentScore == remainingScore)
+	{
+		IsStageClear = true;
+	}
 }
 
 void GameLevel::ProcessPlayerAndEnemy(Actor* inPlayer, Actor* inEnemy)

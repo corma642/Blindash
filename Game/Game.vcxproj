@@ -175,6 +175,8 @@
     <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="Actor\Wall.cpp" />
     <ClCompile Include="Actor\Score.cpp" />
+    <ClCompile Include="Level\MainMenuLevel.cpp" />
+    <ClCompile Include="Level\OptionLevel.cpp" />
     <ClCompile Include="Utils\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +188,8 @@
     <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="Actor\Wall.h" />
     <ClInclude Include="Actor\Score.h" />
+    <ClInclude Include="Level\MainMenuLevel.h" />
+    <ClInclude Include="Level\OptionLevel.h" />
     <ClInclude Include="Utils\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

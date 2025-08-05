@@ -2,6 +2,7 @@
 #include "Level\Level.h"
 #include "Utils/Utils.h"
 #include "Render/ScreenBuffer.h"
+#include "../Game/Game/Game.h"
 
 #include <iostream>
 
@@ -87,9 +88,6 @@ void Engine::Run()
 		// 엔진 종료 여부 확인.
 		if (isQuit)
 		{
-			// 대략 3초 정지
-			Sleep(3000);
-
 			break;
 		}
 
@@ -124,10 +122,22 @@ void Engine::Run()
 			// 현재 프레임의 키 입력을 기록
 			input.SavePreviousKeyStates();
 
-			// 이전 프레임에 추가 및 삭제 요청된 액터 처리
 			if (mainLevel)
 			{
+				// 이전 프레임에 추가 및 삭제 요청된 액터 처리
 				mainLevel->ProcessAddAndDestroyActors();
+
+				// 게임 오버 처리
+				if (mainLevel->GameOver())
+				{
+					Sleep(2000);
+					OnGameOver();
+				}
+				else if (mainLevel->StageClear())
+				{
+					Sleep(2000);
+					OnStageClear();
+				}
 			}
 		}
 	}
@@ -163,10 +173,7 @@ void Engine::WriteToBuffer(const Vector2& position, const char* image, Color col
 void Engine::AddLevel(Level* newLevel)
 {
 	// 기존에 있던 레벨 제거
-	if (mainLevel)
-	{
-		delete mainLevel;
-	}
+	SafeDelete(mainLevel);
 
 	mainLevel = newLevel;
 }

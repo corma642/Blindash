@@ -49,8 +49,8 @@ private:
 	Timer playerRepeatMoveYTimer;
 
 	// 반복/연속 이동 임계값
-	float xMoveThreshold = 0.15f;
-	float yMoveThreshold = 0.3f;
+	float xMoveThreshold = 0.1f;
+	float yMoveThreshold = 0.2f;
 
 	// 게임 레벨 인터페이스
 	class IGameLevelInterface* gameLevelInterface = nullptr;

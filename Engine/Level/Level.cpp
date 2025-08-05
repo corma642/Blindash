@@ -1,6 +1,7 @@
 #include "Level.h"
 #include "Actor\Actor.h"
 #include "Utils/Utils.h"
+#include "Engine.h"
 
 #include <algorithm>
 #include <vector>
@@ -120,6 +121,16 @@ void Level::ProcessAddAndDestroyActors()
 
 	// 추가 배열 초기화
 	addRequstedActors.clear();
+}
+
+bool Level::StageClear()
+{
+	return IsStageClear;
+}
+
+bool Level::GameOver()
+{
+	return isPlayerDead;
 }
 
 bool Level::ShouldRenderActor(Actor* inActor)

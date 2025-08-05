@@ -1,9 +1,9 @@
 #include "Player.h"
 #include "Input.h"
-#include "Engine.h"
 #include "Level/Level.h"
 #include "Interface/GameLevelInterface.h"
 #include "Utils/Timer.h"
+#include "Game/Game.h"
 
 #include <iostream>
 
@@ -38,7 +38,7 @@ void Player::Tick(float deltaTime)
 
 	if (Input::Get().GetKey(VK_ESCAPE))
 	{
-		Engine::Get().Quit();
+		Game::Get().ToggleOptionMenu();
 		return;
 	}
 
