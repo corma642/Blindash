@@ -14,11 +14,11 @@ public:
 	void GameStart();
 
 	// 옵션 함수
-	void ToggleMainMenu();
+	void ChangeMainMenu();
 	void ToggleOptionMenu();
 
-	// 스테이지 클리어 시, 수행할 로직
-	virtual void OnStageClear() override;
+	// 스테이지 선택 함수
+	void ChangeSelectStageMenu(int stageNumber);
 
 	// 게임 오버 시, 수행할 로직
 	virtual void OnGameOver() override;
@@ -31,14 +31,14 @@ private:
 	// 옵션 레벨
 	Level* optionLevel = nullptr;
 
-	// 화면에 안보이는 레벨
-	Level* backLevel = nullptr;
+	// 플레이중인 게임 레벨
+	Level* gameLevel = nullptr;
 
-	// 현재 옵션 레벨을 보여주고 있는지를 나타냄
-	bool showOption = false;
-
-	// 현재 메인 메뉴 레벨을 보여주고 있는지를 나타냄
+	// 현재 메인 메뉴 레벨을 보여주고있는지 확인하는 함수
 	bool showMainMenu = false;
+
+	// 현재 옵션 레벨을 보여주고있는지 확인하는 함수
+	bool showOptionMenu = false;
 
 	static Game* instance;
 };

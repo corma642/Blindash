@@ -12,14 +12,36 @@
 
 #include <iostream>
 
-GameLevel::GameLevel()
+GameLevel::GameLevel(const int stageNum)
 {
-	ReadStageFile("Stage_03.txt");
+	currnetStage = stageNum;
+	char raedStageFileName[50]{};
+	sprintf_s(raedStageFileName, 50, "Stage_0%d.txt", stageNum);
+
+	ReadStageFile(raedStageFileName);
 }
 
 void GameLevel::Tick(float deltaTime)
 {
-	super::Tick(deltaTime);
+	if (IsStageClear)
+	{
+		// 입력 처리
+		if (Input::Get().GetKeyDown(VK_RETURN))
+		{
+			IsStageClear = false;
+			Game::Get().ChangeSelectStageMenu(++currnetStage);
+		}
+
+		if (Input::Get().GetKeyDown(VK_ESCAPE))
+		{
+			IsStageClear = false;
+			Game::Get().ChangeMainMenu();
+		}
+	}
+	else
+	{
+		super::Tick(deltaTime);
+	}
 }
 
 void GameLevel::Render()
@@ -30,11 +52,15 @@ void GameLevel::Render()
 	{
 		// 스테이지 클리어 문구 출력
 		char buffer1[25]{ "[ !- GAME CLEAR -! ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 1), buffer1, Color::Green);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 2), buffer1, Color::Green);
 
 		// 다음 스테이지 바로가기 문구 출력
 		char buffer2[50]{ "[ 다음 스테이지 바로가기 >> \"Enter\" ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer2, Color::White);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 1), buffer2, Color::White);
+
+		// 메인 메뉴로 가기 문구 출력
+		char buffer3[50]{ "[ 메인 메뉴로 가기 >> \"ESC\" ]" };
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 0), buffer3, Color::White);
 	}
 	else if (isPlayerDead)
 	{
@@ -206,7 +232,7 @@ void GameLevel::ReadStageFile(const char* fileName)
 	if (useDark) AddActor(new Dark(stagePos));
 
 	// 버퍼 해제
-	delete[] buffer;
+	SafeDeleteArray(buffer);
 
 	// 파일 닫기
 	fclose(mapFile);

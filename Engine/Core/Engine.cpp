@@ -133,11 +133,14 @@ void Engine::Run()
 					Sleep(2000);
 					OnGameOver();
 				}
-				else if (mainLevel->StageClear())
-				{
-					Sleep(2000);
-					OnStageClear();
-				}
+			}
+
+			// 레벨 변경 요청이 었었으면 처리.
+			if (levelChangeRequested && changeRequestedLevel)
+			{
+				AddLevel(changeRequestedLevel);
+				changeRequestedLevel = nullptr;
+				levelChangeRequested = false;
 			}
 		}
 	}
@@ -176,6 +179,15 @@ void Engine::AddLevel(Level* newLevel)
 	SafeDelete(mainLevel);
 
 	mainLevel = newLevel;
+}
+
+void Engine::ChangeLevel(Level* newLevel)
+{
+	// 레벨 변경 요청 플래그 설정.
+	levelChangeRequested = true;
+
+	// 변경할 레벨 정보.
+	changeRequestedLevel = newLevel;
 }
 
 void Engine::CleanUp()

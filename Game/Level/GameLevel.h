@@ -9,7 +9,7 @@ class GameLevel : public Level, public IGameLevelInterface
 	RTTI_DECLARATIONS(GameLevel, Level)
 
 public:
-	GameLevel();
+	GameLevel(const int stageNum);
 
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
@@ -41,6 +41,8 @@ private:
 
 	// ¸ÊÀÇ x, y°ª ÁÂÇ¥
 	Vector2 stagePos = Vector2::Zero;
+
+	int currnetStage = 0;
 
 	// Todo: ¾ÏÈæ ½Ã¾ß on/off ¿É¼Ç
 	bool useDark = true;

@@ -71,6 +71,9 @@ public:
 	// 레벨 추가 함수
 	void AddLevel(Level* newLevel);
 
+	// 레벨 변경 함수.
+	void ChangeLevel(Level* newLevel);
+
 	// 메모리 해제 함수
 	virtual void CleanUp();
 
@@ -109,9 +112,6 @@ protected:
 	// 엔진 설정 로드 함수
 	void LoadEngineSettings();
 
-	// 스테이지 클리어 시, 수행할 로직
-	virtual void OnStageClear() = 0;
-
 	// 게임 오버 시, 수행할 로직
 	virtual void OnGameOver() = 0;
 
@@ -133,6 +133,12 @@ protected:
 
 	// 백버퍼로 사용하는 렌더 타겟의 인덱스.
 	int currentRenderTargetIndex = 0;
+
+	// 레벨 변경이 요청됐는지 여부를 확인하는 변수.
+	bool levelChangeRequested = false;
+
+	// 변경 요청된 레벨 정보.
+	Level* changeRequestedLevel = nullptr;
 
 	// 엔진 설정
 	EngineSettings settings;
