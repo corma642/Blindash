@@ -43,6 +43,9 @@ public:
 	virtual void Render() override;
 
 private:
+	void PrintBackGround();
+
+private:
 	// 현재 선택된 아이템의 인덱스
 	int currentIndex = 0;
 

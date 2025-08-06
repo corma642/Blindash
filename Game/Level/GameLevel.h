@@ -42,8 +42,6 @@ private:
 	// 맵의 x, y값 좌표
 	Vector2 stagePos = Vector2::Zero;
 
+	// 현재 스테이지 레벨
 	int currnetStage = 0;
-
-	// Todo: 암흑 시야 on/off 옵션
-	bool useDark = true;
 };

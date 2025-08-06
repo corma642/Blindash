@@ -9,25 +9,31 @@ SelectStageLevel::SelectStageLevel()
 {
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
-		"Stage 1",
+		">> Stage 1",
 		[]() { Game::Get().ChangeSelectStageMenu(1); }
 	));
 
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
-		"Stage 2",
+		">> Stage 2",
 		[]() { Game::Get().ChangeSelectStageMenu(2); }
 	));
 
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
-		"Stage 3",
+		">> Stage 3",
 		[]() { Game::Get().ChangeSelectStageMenu(3); }
 	));
 
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
-		"Back",
+		">> Stage 4",
+		[]() { Game::Get().ChangeSelectStageMenu(3); }
+	));
+
+	// 메뉴 아이템 추가
+	items.push_back(new SelectMenuItem(
+		">> BACK TO MAIN MENU",
 		[]() { Game::Get().ChangeMainMenu(); }
 	));
 
@@ -72,14 +78,63 @@ void SelectStageLevel::Render()
 {
 	super::Render();
 
+	PrintBackGround();
+
 	// 메뉴 아이템 렌더링
-	for (int i = 0, yPos = 2; i < length; ++i, yPos += 2)
+	for (int i = 0, yPos = 5; i < length; ++i, yPos += 2)
 	{
 		// 아이템 색상 확인
 		Color textColor =
 			(i == currentIndex) ? selectedColor : unSelectedColor;
 
 		// 메뉴 텍스트 출력
-		Engine::Get().WriteToBuffer(Vector2(0, yPos), items[i]->menuText, textColor);
+		Engine::Get().WriteToBuffer(Vector2(2, yPos), items[i]->menuText, textColor);
 	}
+}
+
+void SelectStageLevel::PrintBackGround()
+{
+	char buffer[30][100]{
+		{ "+----------------------------------------------------------+" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "+----------------------------------------------------------+" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "+----------------------------------------------------------+" }
+	};
+
+	for (int i = 0; i < 30; ++i)
+	{
+		Engine::Get().WriteToBuffer(Vector2(0, i), buffer[i], Color::Blue);
+	}
+
+
+	char buffer2[1][100]{
+		{ "* BLINDASH *" },
+	};
+
+	for (int i = 0; i < 1; ++i)
+	{
+		Engine::Get().WriteToBuffer(Vector2(24, 1), buffer2[i], Color::White);
+	}
+
+	char buffer3[1][100]{
+		{ "< CHOOSE A STAGE >" },
+	};
+
+	for (int i = 0; i < 1; ++i)
+	{
+		Engine::Get().WriteToBuffer(Vector2(21, 2), buffer3[i], Color::Green);
+	}
+
 }

@@ -63,9 +63,7 @@ void OptionLevel::Tick(float deltaTime)
 
 	if (Input::Get().GetKeyDown(VK_ESCAPE))
 	{
-		// Game에 토글 메뉴 기능 추가 후 호출해야 함
 		Game::Get().ToggleOptionMenu();
-
 		currentIndex = 0;
 	}
 }
@@ -74,18 +72,59 @@ void OptionLevel::Render()
 {
 	super::Render();
 
-	// 게임 제목 출력
-	char buffer[25]{ "[ PAC-MAN GAME ]" };
-	Engine::Get().WriteToBuffer(Vector2(0, 0), buffer, Color::White);
+	PrintBackGround();
 
 	// 메뉴 아이템 렌더링
-	for (int i = 0, yPos = 2; i < length; ++i, yPos += 2)
+	for (int i = 0, yPos = 5; i < length; ++i, yPos += 2)
 	{
 		// 아이템 색상 확인
 		Color textColor =
 			(i == currentIndex) ? selectedColor : unSelectedColor;
 
 		// 메뉴 텍스트 출력
-		Engine::Get().WriteToBuffer(Vector2(0, yPos), items[i]->menuText, textColor);
+		Engine::Get().WriteToBuffer(Vector2(2, yPos), items[i]->menuText, textColor);
 	}
+}
+
+void OptionLevel::PrintBackGround()
+{
+	char buffer[30][100]{
+		{ "+----------------------------------------------------------+" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "+----------------------------------------------------------+" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "|                                                          |" },
+		{ "+----------------------------------------------------------+" }
+	};
+
+	for (int i = 0; i < 30; ++i)
+	{
+		Engine::Get().WriteToBuffer(Vector2(0, i), buffer[i], Color::Blue);
+	}
+
+
+	char buffer2[1][100]{
+		{ "* BLINDASH *" },
+	};
+
+	for (int i = 0; i < 1; ++i)
+	{
+		Engine::Get().WriteToBuffer(Vector2(24, 1), buffer2[i], Color::White);
+	}
+
+	char buffer3[1][100]{
+		{ "< OPTION >" },
+	};
+
+	for (int i = 0; i < 1; ++i)
+	{
+		Engine::Get().WriteToBuffer(Vector2(25, 2), buffer3[i], Color::Green);
+	}
+
 }

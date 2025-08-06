@@ -42,4 +42,3 @@ private:
 
 	static Game* instance;
 };
-

@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Game.h"
 #include "Input.h"
+#include "Utils/Utils.h"
 
 #include "Level/MainMenuLevel.h"
 #include "Level/SelectStageLevel.h"
@@ -61,6 +62,11 @@ void Game::ToggleOptionMenu()
 
 void Game::ChangeSelectStageMenu(int stageNumber)
 {
+	if (showOptionMenu)
+	{
+		Utils::Swap(gameLevel, optionLevel);
+	}
+
 	// 게임 레벨 추가 후 레벨 전환 요청
 	gameLevel = new GameLevel(stageNumber);
 	ChangeLevel(gameLevel);

@@ -155,12 +155,11 @@ void GameLevel::ReadStageFile(const char* fileName)
 	sprintf_s(filePath, 256, "../Assets/%s", fileName);
 
 	FILE* mapFile = nullptr;
-	fopen_s(&mapFile, filePath, "rb");
+	fopen_s(&mapFile, filePath, "rt");
 
 	// 예외 처리
 	if (!mapFile)
 	{
-		std::cout << "맵 파일 읽기 실패: " << fileName << "\n";
 		__debugbreak();
 		return;
 	}
@@ -175,11 +174,45 @@ void GameLevel::ReadStageFile(const char* fileName)
 	memset(buffer, 0, fileSize + 1);
 	size_t readSize = fread(buffer, sizeof(char), fileSize, mapFile);
 
-	// 배열 순회를 위한 인덱스 변수
-	int index = 0;
-
-	// 문자열 길이 값
+	// 문자열 길이
 	int size = static_cast<int>(readSize);
+
+	// 직사각형 경계 계산
+	int mapWidth = 0;
+	int mapHeight = 0;
+	int currentLineWidth = 0;
+
+	// 맵의 크기 계산
+	for (int i = 0; i < size; i++)
+	{
+		if (buffer[i] == '\n')
+		{
+			if (currentLineWidth > mapWidth)
+			{
+				mapWidth = currentLineWidth;
+			}
+			mapHeight++;
+			currentLineWidth = 0;
+		}
+		else
+		{
+			currentLineWidth++;
+		}
+	}
+
+	// 마지막 줄 처리 (파일 끝에 개행이 없는 경우)
+	if (currentLineWidth > 0)
+	{
+		if (currentLineWidth > mapWidth)
+		{
+			mapWidth = currentLineWidth;
+		}
+		mapHeight++;
+	}
+
+	// 배열 순회를 위한 좌표 및 인덱스 변수
+	stagePos = Vector2(0, 0);
+	int index = 0;
 
 	// 문자 배열 순회
 	while (index < size)
@@ -196,45 +229,50 @@ void GameLevel::ReadStageFile(const char* fileName)
 			continue;
 		}
 
+		// 가장자리 판단 로직
+		bool isTopEdge = (stagePos.y == 0);
+		bool isBottomEdge = (stagePos.y == mapHeight - 1);
+		bool isLeftEdge = (stagePos.x == 0);
+		bool isRightEdge = (stagePos.x == mapWidth - 1);
+
+		bool isEdge = isTopEdge || isBottomEdge || isLeftEdge || isRightEdge;
+
 		// 각 문자별 처리
 		switch (mapCharacter)
 		{
 		case '8':
-			if (useDark) AddActor(new Dark(stagePos));
+			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Wall(stagePos));
 			break;
 
 		case '.':
-			if (useDark) AddActor(new Dark(stagePos));
+			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Score(stagePos));
 			remainingScore++;
 			break;
 
 		case 'D':
-			if (useDark) AddActor(new Dark(stagePos));
+			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Player(stagePos));
 			playerPos = stagePos;
 			break;
 
 		case 'M':
-			if (useDark) AddActor(new Dark(stagePos));
+			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Enemy(stagePos));
 			break;
 
-		default:
-			if (useDark) AddActor(new Dark(stagePos));
+		case ' ':
+			if (!isEdge) AddActor(new Dark(stagePos));
 			break;
 		}
 
 		// x좌표 증가 처리
 		stagePos.x++;
 	}
-	if (useDark) AddActor(new Dark(stagePos));
 
-	// 버퍼 해제
+	// 리소스 정리
 	SafeDeleteArray(buffer);
-
-	// 파일 닫기
 	fclose(mapFile);
 }
 

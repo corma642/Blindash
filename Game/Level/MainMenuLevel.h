@@ -43,7 +43,8 @@ public:
 	virtual void Render() override;
 
 private:
-	void PrintGameName();
+	//void PrintGameName();
+	void PrintGameName2();
 
 private:
 	// 현재 선택된 아이템의 인덱스

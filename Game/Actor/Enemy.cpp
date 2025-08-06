@@ -87,21 +87,21 @@ void Enemy::GetRandomMoveDirection(MoveDirection& inMoveDirection, Vector2& inMo
 	case 1:
 		inMoveDirection = MoveDirection::Up;
 		inMoveValue.x = 0;
-		inMoveValue.y = Utils::Random(-1, -2);
+		inMoveValue.y = Utils::Random(-1, -3);
 		break;
 	case 2:
 		inMoveDirection = MoveDirection::Right;
-		inMoveValue.x = Utils::Random(1, 2);
+		inMoveValue.x = Utils::Random(1, 3);
 		inMoveValue.y = 0;
 		break;
 	case 3:
 		inMoveDirection = MoveDirection::Down;
 		inMoveValue.x = 0;
-		inMoveValue.y = Utils::Random(1, 2);
+		inMoveValue.y = Utils::Random(1, 3);
 		break;
 	case 4:
 		inMoveDirection = MoveDirection::Left;
-		inMoveValue.x = Utils::Random(-1, -2);
+		inMoveValue.x = Utils::Random(-1, -3);
 		inMoveValue.y = 0;
 		break;
 	}
