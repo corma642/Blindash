@@ -294,7 +294,7 @@ void GameLevel::ReadStageFile(const char* fileName)
 		bool isRightEdge = (stagePos.x == mapWidth - 1);
 
 		bool isEdge = isTopEdge || isBottomEdge || isLeftEdge || isRightEdge;
-
+		isEdge = true;
 		// 각 문자별 처리
 		switch (mapCharacter)
 		{
@@ -345,7 +345,7 @@ void GameLevel::PrintRemainingScore()
 void GameLevel::PrintTimeLimit()
 {
 	char buffer[50]{};
-	sprintf_s(buffer, 20, "남은 시간: %.3f", timeLimit);
+	sprintf_s(buffer, 50, "남은 시간: %.3f", timeLimit);
 
 	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::White);
 }

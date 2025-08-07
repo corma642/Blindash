@@ -72,11 +72,10 @@ void Game::ChangeSelectStageMenu(const int stageNumber, const float timeLimit)
 	ChangeLevel(gameLevel);
 
 	// 可记 饭骇 积己
-	if (optionLevel)
+	if (!optionLevel)
 	{
-		SafeDelete(optionLevel);
+		optionLevel = new OptionLevel();
 	}
-	optionLevel = new OptionLevel();
 }
 
 void Game::OnGameOver()

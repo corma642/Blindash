@@ -3,7 +3,7 @@
 // 효과 재생에 사용할 문자열 시퀀스 (일종의 애니메이션 프레임).
 static const AddTimeLimitEffectFrame sequence[] =
 {
-	AddTimeLimitEffectFrame("+1", 0.1f, Color::Green),
+	AddTimeLimitEffectFrame("+1", 0.07f, Color::Green),
 	AddTimeLimitEffectFrame("+1", 0.05f, Color::Red),
 	AddTimeLimitEffectFrame("+1", 0.1f, Color::Green),
 };

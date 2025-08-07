@@ -16,7 +16,7 @@ OptionLevel::OptionLevel()
 	// 메뉴 아이템 추가
 	items.push_back(new OptionMenuItem(
 		"Main Menu",
-		[]() { Game::Get().ChangeMainMenu(); }
+		[]() { Game::Get().ToggleOptionMenu(); Game::Get().ChangeMainMenu(); }
 	));
 
 	// 메뉴 아이템 추가

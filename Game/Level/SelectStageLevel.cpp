@@ -29,7 +29,7 @@ SelectStageLevel::SelectStageLevel()
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
 		">> Stage 4",
-		[]() { Game::Get().ChangeSelectStageMenu(3, StageLimit::GetStageLimit(4)); }
+		[]() { Game::Get().ChangeSelectStageMenu(4, StageLimit::GetStageLimit(4)); }
 	));
 
 	// 메뉴 아이템 추가
