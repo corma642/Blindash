@@ -294,7 +294,7 @@ void GameLevel::ReadStageFile(const char* fileName)
 		bool isRightEdge = (stagePos.x == mapWidth - 1);
 
 		bool isEdge = isTopEdge || isBottomEdge || isLeftEdge || isRightEdge;
-		isEdge = true;
+
 		// 각 문자별 처리
 		switch (mapCharacter)
 		{
