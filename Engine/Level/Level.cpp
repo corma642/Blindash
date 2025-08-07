@@ -2,6 +2,7 @@
 #include "Actor\Actor.h"
 #include "Utils/Utils.h"
 #include "Engine.h"
+//#include "..\Game\Actor\Effect\ExpandVisionEffect.h"
 
 #include <algorithm>
 #include <vector>
@@ -63,6 +64,22 @@ void Level::Tick(float deltaTime)
 			continue;
 		}
 
+		// 생명 주기 확인 및 처리
+		if (actor->autoDestroy)
+		{
+			// 생명 주기 감소 처리
+			actor->lifeTime -= deltaTime;
+
+			// 수명이 다했는지 확인
+			if (actor->lifeTime <= 0.0f)
+			{
+				// 액터 제거 요청하고, 다음 액터 처리
+				actor->lifeTime = 0.0f;
+				actor->Destroy();
+				continue;
+			}
+		}
+
 		actor->Tick(deltaTime);
 	}
 }
@@ -83,6 +100,10 @@ void Level::Render()
 			actor->Render();
 		}
 	}
+}
+
+void Level::SetPlayerVisionRadius(float newVisionWidth, float newVisionHeight)
+{
 }
 
 void Level::ProcessAddAndDestroyActors()
@@ -152,11 +173,11 @@ bool Level::ShouldRenderActor(Actor* inActor)
 
 	// 플레이어와 암흑 액터간의 거리 구하기
 	if (IsWithinEllipticalZone(position, playerPos)) return false;
-	
+
 	return true;
 }
 
-bool Level::IsWithinEllipticalZone(const Vector2& playerPos, const Vector2& actorPos) const
+bool Level::IsWithinEllipticalZone(const Vector2& actorPos, const Vector2& playerPos) const
 {
 	float deltaX = static_cast<float>(abs(actorPos.x - playerPos.x));
 	float deltaY = static_cast<float>(abs(actorPos.y - playerPos.y));
@@ -164,6 +185,21 @@ bool Level::IsWithinEllipticalZone(const Vector2& playerPos, const Vector2& acto
 	// 정규화된 타원 방정식: (x/a)² + (y/b)² <= 1
 	float normalizedDistance = (deltaX * deltaX) / (playerVisionWidth * playerVisionWidth) +
 		(deltaY * deltaY) / (playerVisionHeight * playerVisionHeight);
+
+	return normalizedDistance <= 1.0f;
+}
+
+bool Level::IsWithinEllipticalZoneV2(const Vector2& actorPos, const Vector2& playerPos) const
+{
+	float newPlayerVisionWidth = playerVisionWidth - 1.0f;
+	float newPlayerVisionHeight = playerVisionHeight - 0.5f;
+
+	float deltaX = static_cast<float>(abs(actorPos.x - playerPos.x));
+	float deltaY = static_cast<float>(abs(actorPos.y - playerPos.y));
+
+	// 정규화된 타원 방정식: (x/a)² + (y/b)² <= 1
+	float normalizedDistance = (deltaX * deltaX) / (newPlayerVisionWidth * newPlayerVisionWidth) +
+		(deltaY * deltaY) / (newPlayerVisionHeight * newPlayerVisionHeight);
 
 	return normalizedDistance <= 1.0f;
 }

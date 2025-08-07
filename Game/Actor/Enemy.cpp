@@ -6,7 +6,7 @@
 #include <iostream>
 
 Enemy::Enemy(const Vector2 position)
-	:super("M", Color::Violet, position)
+	:super("M", static_cast<Color>(Utils::Random(4, 5)), position)
 {
 	SetSortingOrder(SortingOrder::Enemy);
 

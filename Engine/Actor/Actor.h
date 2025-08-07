@@ -14,6 +14,7 @@ enum class SortingOrder : unsigned __int8
 	Item,
 	Enemy,
 	Dark,
+	Effect,
 	Player,
 };
 
@@ -65,10 +66,19 @@ public:
 	// 객체 삭제 함수
 	void Destroy();
 
+	// 액터의 이미지 값 변경 함수
+	void ChangeImage(const char* newImage);
+
+	// 객체가 삭제되기 직전에 호출되는 함수
+	virtual void OnDestroy();
+
+	// 생명 주기 설정 함수
+	void SetLifetime(float newLifeTime);
+
 	// 게임 종료 요청 함수
 	void QuitGame();
 
-private:
+protected:
 	// 개체의 위치
 	Vector2 position;
 
@@ -89,6 +99,12 @@ private:
 
 	// 액터가 삭제 요청되었는지 확인하는 변수
 	bool isExpired = false;
+
+	// 수명 주기 (단위: 초)
+	float lifeTime = 0.0f;
+
+	// 이 플래그를 true로 설정하면 수명 주기를 사용해 자동 제거
+	bool autoDestroy = false;
 
 	// 소유 레벨(오너십)
 	Level* owner = nullptr;

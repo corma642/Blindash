@@ -9,6 +9,7 @@
 #include "Actor/Wall.h"
 #include "Actor/Dark.h"
 #include "Actor/Score.h"
+#include "Actor/Effect/ExpandVisionEffect.h"
 
 #include <iostream>
 
@@ -146,6 +147,42 @@ bool GameLevel::CanMove(class Actor* inActor, const Vector2& currentPosition, co
 
 	// 여기 왔다는 것은 빈 공간이라는 의미
 	return true;
+}
+
+void GameLevel::SetPlayerVisionRadius(float newVisionWidth, float newVisionHeight)
+{
+	// 슈퍼 모드(전체 비전)가 아닌 경우에만 시야 범위가 증가되는 부분에 이펙트 추가
+	if (!GetEnableGlobalVision())
+	{
+		CalculateVisionRing();
+	}
+
+	// 시야 반경 업데이트
+	playerVisionWidth = newVisionWidth;
+	playerVisionHeight = newVisionHeight;
+}
+
+void GameLevel::CalculateVisionRing()
+{
+	std::vector<Vector2> ringTiles;
+
+	for (int y = 1; y < stagePos.y - 1; ++y)
+	{
+		for (int x = 1; x < stagePos.x - 1; ++x)
+		{
+			// 시야 범위 밖이면 건너뜀
+			if (!IsWithinEllipticalZone(Vector2(x, y), playerPos))
+			{
+				continue;
+			}
+
+			// 시야 범위의 테두리라면
+			if (!IsWithinEllipticalZoneV2(Vector2(x, y), playerPos))
+			{
+				AddActor(new ExpandVisionEffect(Vector2(x, y)));
+			}
+		}
+	}
 }
 
 void GameLevel::ReadStageFile(const char* fileName)
@@ -294,9 +331,9 @@ void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 	inScore->SetSortingOrder(SortingOrder::None);
 
 	// 아이템 발동 처리
-	// 20% 확률로 아이템 발동
+	// 15% 확률로 아이템 발동
 	int itemActivation = Utils::Random(1, 100);
-	if (itemActivation <= 20)
+	if (itemActivation <= 15)
 	{
 		Player* player = inPlayer->As<Player>();
 		if (!player)
@@ -305,22 +342,20 @@ void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 		}
 
 		// 발동할 아이템 능력 랜덤 뽑기
-		int itemType = Utils::Random(1, 6);
+		int itemType = Utils::Random(1, 5);
 
 		switch (itemType)
 		{
 		case 1:
 		case 2:
 		case 3:
+		case 4:
+			// 플레이어 시야 반경 증가
 			player->ItemExpandVisionRange();
 			break;
 
-		case 4:
 		case 5:
-			player->StartGlobalVision();
-			break;
-
-		case 6:
+			// 슈퍼 모드 활성화
 			player->StartSuperMode();
 			break;
 		}

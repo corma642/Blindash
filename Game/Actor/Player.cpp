@@ -45,71 +45,17 @@ void Player::Tick(float deltaTime)
 	// 이동 입력 처리
 	PlayerMovement(deltaTime);
 
-	// GlobalVision
-	ItemActivateGlobalVision(deltaTime);
-
 	// 슈퍼 모드
 	ItemActivateSuperMode(deltaTime);
 }
 
 void Player::ItemExpandVisionRange()
 {
-	Level* OwningLevel = GetOwner();
-	if (!OwningLevel)
-	{
-		__debugbreak();
-	}
+	float currentPlayerVistionWidth = owner->GetPlayerVisionWidth();
+	float currentPlayerVistionHeight = owner->GetPlayerVisionHeight();
 
-	float currentPlayerVistionWidth = OwningLevel->GetPlayerVisionWidth();
-	float currentPlayerVistionHeight = OwningLevel->GetPlayerVisionHeight();
-
-	OwningLevel->SetPlayerVisionWidth(currentPlayerVistionWidth + 1.0f);
-	OwningLevel->SetPlayerVisionHeight(currentPlayerVistionHeight + 0.5f);
-}
-
-void Player::ItemActivateGlobalVision(float deltaTime)
-{
-	// GlobalVision 활성화 상태에서 추가 활성화
-	if (bStartGlobalVision && bEnableGlobalVision)
-	{
-		// 지속 시간 초기화
-		GlobalVisionTimer.Reset();
-		bStartGlobalVision = false;
-	}
-
-	// GlobalVision 비활성화 상태에서 GlobalVision 활성화
-	if (bStartGlobalVision && !bEnableGlobalVision)
-	{
-		GlobalVisionTimer.SetTargetTime(GlobalVisionTime);
-		bStartGlobalVision = false;
-		bEnableGlobalVision = true;
-
-		Level* OwningLevel = GetOwner();
-		if (!OwningLevel)
-		{
-			__debugbreak();
-		}
-		OwningLevel->SetEnableGlobalVision(true);
-	}
-
-	// GlobalVision 활성화
-	if (bEnableGlobalVision)
-	{
-		GlobalVisionTimer.Tick(deltaTime);
-
-		if (GlobalVisionTimer.IsTimeout())
-		{
-			GlobalVisionTimer.Reset();
-			bEnableGlobalVision = false;
-
-			Level* OwningLevel = GetOwner();
-			if (!OwningLevel)
-			{
-				__debugbreak();
-			}
-			OwningLevel->SetEnableGlobalVision(false);
-		}
-	}
+	// 시야 반경 증가
+	owner->SetPlayerVisionRadius(currentPlayerVistionWidth + 1.0f, currentPlayerVistionHeight + 0.5f);
 }
 
 void Player::ItemActivateSuperMode(float deltaTime)
@@ -161,58 +107,58 @@ void Player::ItemActivateSuperMode(float deltaTime)
 
 void Player::PlayerMovement(float deltaTime)
 {
-	if (Input::Get().GetKeyDown('A'))
+	if (Input::Get().GetKeyDown('A') || Input::Get().GetKeyDown(VK_LEFT))
 	{
 		HorizontalMove(false, false);
 	}
-	else if (Input::Get().GetKey('A'))
+	else if (Input::Get().GetKey('A') || Input::Get().GetKeyDown(VK_LEFT))
 	{
 		playerRepeatMoveXTimer.Tick(deltaTime);
 		HorizontalMove(false, true);
 	}
-	else if (Input::Get().GetKeyUp('A'))
+	else if (Input::Get().GetKeyUp('A') || Input::Get().GetKeyDown(VK_LEFT))
 	{
 		playerRepeatMoveXTimer.Reset();
 	}
 
-	if (Input::Get().GetKeyDown('D'))
+	if (Input::Get().GetKeyDown('D') || Input::Get().GetKeyDown(VK_RIGHT))
 	{
 		HorizontalMove(true, false);
 	}
-	else if (Input::Get().GetKey('D'))
+	else if (Input::Get().GetKey('D') || Input::Get().GetKeyDown(VK_RIGHT))
 	{
 		playerRepeatMoveXTimer.Tick(deltaTime);
 		HorizontalMove(true, true);
 	}
-	else if (Input::Get().GetKeyUp('D'))
+	else if (Input::Get().GetKeyUp('D') || Input::Get().GetKeyDown(VK_RIGHT))
 	{
 		playerRepeatMoveXTimer.Reset();
 	}
 
-	if (Input::Get().GetKeyDown('W'))
+	if (Input::Get().GetKeyDown('W') || Input::Get().GetKeyDown(VK_UP))
 	{
 		VerticalMove(false, false);
 	}
-	else if (Input::Get().GetKey('W'))
+	else if (Input::Get().GetKey('W') || Input::Get().GetKeyDown(VK_UP))
 	{
 		playerRepeatMoveYTimer.Tick(deltaTime);
 		VerticalMove(false, true);
 	}
-	else if (Input::Get().GetKeyUp('W'))
+	else if (Input::Get().GetKeyUp('W') || Input::Get().GetKeyDown(VK_UP))
 	{
 		playerRepeatMoveYTimer.Reset();
 	}
 
-	if (Input::Get().GetKeyDown('S'))
+	if (Input::Get().GetKeyDown('S') || Input::Get().GetKeyDown(VK_DOWN))
 	{
 		VerticalMove(true, false);
 	}
-	else if (Input::Get().GetKey('S'))
+	else if (Input::Get().GetKey('S') || Input::Get().GetKeyDown(VK_DOWN))
 	{
 		playerRepeatMoveYTimer.Tick(deltaTime);
 		VerticalMove(true, true);
 	}
-	else if (Input::Get().GetKeyUp('S'))
+	else if (Input::Get().GetKeyUp('S') || Input::Get().GetKeyDown(VK_DOWN))
 	{
 		playerRepeatMoveYTimer.Reset();
 	}

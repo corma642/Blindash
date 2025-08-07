@@ -9,6 +9,8 @@ class Score : public Actor
 public:
 	Score(const Vector2& position);
 
+	virtual void OnDestroy() override;
+
 private:
 
 };

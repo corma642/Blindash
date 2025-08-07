@@ -20,6 +20,12 @@ public:
 		const Vector2& currentPosition,
 		const Vector2& nextPosition) override;
 
+	// 플레이어 시야 반경 설정 함수
+	virtual void SetPlayerVisionRadius(float newVisionWidth, float newVisionHeight) override;
+
+	// 플레이어의 시야 반경이 늘어난 외곽 테두리 타일 구하는 함수
+	void CalculateVisionRing();
+
 private:
 	void ReadStageFile(const char* fileName);
 
@@ -38,9 +44,6 @@ private:
 
 	// 클리어까지 남은 점수
 	int remainingScore = 0;
-
-	// 맵의 x, y값 좌표
-	Vector2 stagePos = Vector2::Zero;
 
 	// 현재 스테이지 레벨
 	int currnetStage = 0;
