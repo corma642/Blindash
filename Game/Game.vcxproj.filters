@@ -39,9 +39,6 @@
     <ClCompile Include="Actor\Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\Timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Level\MainMenuLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,6 +52,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Actor\Effect\ExpandVisionEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\Effect\AddTimeLimitEffect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,9 +86,6 @@
     <ClInclude Include="Interface\GameLevelInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Level\MainMenuLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -99,6 +99,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Effect\ExpandVisionEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StageLimit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\Effect\AddTimeLimitEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

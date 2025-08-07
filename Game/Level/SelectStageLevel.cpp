@@ -2,6 +2,7 @@
 #include "Game/Game.h"
 #include "Utils/Utils.h"
 #include "Input.h"
+#include "Utils/StageLimit.h"
 
 #include <iostream>
 
@@ -10,25 +11,25 @@ SelectStageLevel::SelectStageLevel()
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
 		">> Stage 1",
-		[]() { Game::Get().ChangeSelectStageMenu(1); }
+		[]() { Game::Get().ChangeSelectStageMenu(1, StageLimit::GetStageLimit(1)); }
 	));
 
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
 		">> Stage 2",
-		[]() { Game::Get().ChangeSelectStageMenu(2); }
+		[]() { Game::Get().ChangeSelectStageMenu(2, StageLimit::GetStageLimit(2)); }
 	));
 
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
 		">> Stage 3",
-		[]() { Game::Get().ChangeSelectStageMenu(3); }
+		[]() { Game::Get().ChangeSelectStageMenu(3, StageLimit::GetStageLimit(3)); }
 	));
 
 	// 메뉴 아이템 추가
 	items.push_back(new SelectMenuItem(
 		">> Stage 4",
-		[]() { Game::Get().ChangeSelectStageMenu(3); }
+		[]() { Game::Get().ChangeSelectStageMenu(3, StageLimit::GetStageLimit(4)); }
 	));
 
 	// 메뉴 아이템 추가

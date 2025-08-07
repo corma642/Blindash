@@ -4,9 +4,9 @@
 #include "Utils/Timer.h"
 
 // 애니메이션 이펙트 프레임 구조체.
-struct ExpandVisionEffectEffectFrame
+struct ExpandVisionEffectFrame
 {
-	ExpandVisionEffectEffectFrame(const char* frame, float playTime = 0.05f, Color color = Color::Green)
+	ExpandVisionEffectFrame(const char* frame, float playTime = 0.05f, Color color = Color::Green)
 		: playTime(playTime), color(color)
 	{
 		// 문자열 설정.
@@ -15,7 +15,7 @@ struct ExpandVisionEffectEffectFrame
 		strcpy_s(this->frame, length, frame);
 	}
 
-	~ExpandVisionEffectEffectFrame()
+	~ExpandVisionEffectFrame()
 	{
 		SafeDelete(frame);
 	}

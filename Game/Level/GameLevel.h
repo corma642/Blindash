@@ -9,7 +9,7 @@ class GameLevel : public Level, public IGameLevelInterface
 	RTTI_DECLARATIONS(GameLevel, Level)
 
 public:
-	GameLevel(const int stageNum);
+	GameLevel(const int stageNumber, const float timeLimit);
 
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
@@ -30,7 +30,10 @@ private:
 	void ReadStageFile(const char* fileName);
 
 	// 남은 스코어 출력 함수
-	void PrintScore();
+	void PrintRemainingScore();
+
+	// 남은 제한 시간 출력 함수
+	void PrintTimeLimit();
 
 	// 플레이어와 점수의 처리
 	void ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore);
@@ -39,11 +42,11 @@ private:
 	void ProcessPlayerAndEnemy(Actor* inPlayer, Actor* inEnemy);
 
 private:
-	// 현재 점수
-	int currentScore = 0;
-
 	// 클리어까지 남은 점수
 	int remainingScore = 0;
+
+	// 스테이지 제한 시간
+	float timeLimit = 0.0f;
 
 	// 현재 스테이지 레벨
 	int currnetStage = 0;

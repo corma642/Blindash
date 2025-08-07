@@ -4,9 +4,9 @@
 #include "Utils/Timer.h"
 
 // 애니메이션 이펙트 프레임 구조체.
-struct ScoreDestroyEffectFrame
+struct AddTimeLimitEffectFrame
 {
-	ScoreDestroyEffectFrame(const char* frame, float playTime = 0.05f, Color color = Color::Green)
+	AddTimeLimitEffectFrame(const char* frame, float playTime = 0.05f, Color color = Color::Green)
 		: playTime(playTime), color(color)
 	{
 		// 문자열 설정.
@@ -15,7 +15,7 @@ struct ScoreDestroyEffectFrame
 		strcpy_s(this->frame, length, frame);
 	}
 
-	~ScoreDestroyEffectFrame()
+	~AddTimeLimitEffectFrame()
 	{
 		SafeDelete(frame);
 	}
@@ -30,12 +30,12 @@ struct ScoreDestroyEffectFrame
 	Color color = Color::White;
 };
 
-class ScoreDestroyEffect : public Actor
+class AddTimeLimitEffect : public Actor
 {
-	RTTI_DECLARATIONS(ScoreDestroyEffect, Actor)
+	RTTI_DECLARATIONS(AddTimeLimitEffect, Actor)
 
 public:
-	ScoreDestroyEffect(const Vector2& position);
+	AddTimeLimitEffect(const char* frameChar, const Vector2& position);
 
 	virtual void Tick(float deltaTime) override;
 

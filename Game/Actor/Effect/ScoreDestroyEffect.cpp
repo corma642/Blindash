@@ -1,11 +1,11 @@
 #include "ScoreDestroyEffect.h"
 
 // 효과 재생에 사용할 문자열 시퀀스 (일종의 애니메이션 프레임).
-static const ScoreDestroyEffectEffectFrame sequence[] =
+static const ScoreDestroyEffectFrame sequence[] =
 {
-	ScoreDestroyEffectEffectFrame(".", 0.15f, Color::Green),
-	ScoreDestroyEffectEffectFrame(".", 0.15f, Color::Yellow),
-	ScoreDestroyEffectEffectFrame(".", 0.15f, Color::SkyBlue),
+	ScoreDestroyEffectFrame(".", 0.15f, Color::Green),
+	ScoreDestroyEffectFrame(".", 0.15f, Color::Yellow),
+	ScoreDestroyEffectFrame(".", 0.15f, Color::SkyBlue),
 };
 
 ScoreDestroyEffect::ScoreDestroyEffect(const Vector2& position)

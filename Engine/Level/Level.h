@@ -50,7 +50,7 @@ public:
 	// 스테이지를 클리어했는지 확인하는 함수
 	bool StageClear();
 
-	// 플레이어가 사망했는지 확인하는 함수
+	// 게임이 패배로 끝났는지 확인하는 함수
 	bool GameOver();
 
 protected:
@@ -92,5 +92,8 @@ protected:
 
 	// 플레이어의 죽음 여부
 	bool isPlayerDead = false;
+
+	// 스테이지 제한 시간 초과 여부
+	bool isTimeOut = false;
 };
 

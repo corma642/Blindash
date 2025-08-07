@@ -3,6 +3,7 @@
 #include "Game/Game.h"
 #include "Utils/Utils.h"
 #include "Level/Level.h"
+#include "Utils/StageLimit.h"
 
 #include "Actor/Player.h"
 #include "Actor/Enemy.h"
@@ -10,14 +11,17 @@
 #include "Actor/Dark.h"
 #include "Actor/Score.h"
 #include "Actor/Effect/ExpandVisionEffect.h"
+#include "Actor/Effect/AddTimeLimitEffect.h"
 
 #include <iostream>
 
-GameLevel::GameLevel(const int stageNum)
+GameLevel::GameLevel(const int stageNumber, const float timeLimit)
 {
-	currnetStage = stageNum;
+	currnetStage = stageNumber;
+	this->timeLimit = timeLimit;
+
 	char raedStageFileName[50]{};
-	sprintf_s(raedStageFileName, 50, "Stage_0%d.txt", stageNum);
+	sprintf_s(raedStageFileName, 50, "Stage_0%d.txt", stageNumber);
 
 	ReadStageFile(raedStageFileName);
 }
@@ -30,7 +34,7 @@ void GameLevel::Tick(float deltaTime)
 		if (Input::Get().GetKeyDown(VK_RETURN))
 		{
 			IsStageClear = false;
-			Game::Get().ChangeSelectStageMenu(++currnetStage);
+			Game::Get().ChangeSelectStageMenu(++currnetStage, StageLimit::GetStageLimit(currnetStage));
 		}
 
 		if (Input::Get().GetKeyDown(VK_ESCAPE))
@@ -42,6 +46,12 @@ void GameLevel::Tick(float deltaTime)
 	else
 	{
 		super::Tick(deltaTime);
+
+		timeLimit -= deltaTime;
+		if (timeLimit <= 0)
+		{
+			isTimeOut = true;
+		}
 	}
 }
 
@@ -69,9 +79,20 @@ void GameLevel::Render()
 		char buffer[20]{ "[ YOU DIED... ]" };
 		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::Red);
 	}
+	else if (isTimeOut)
+	{
+		// 타임 아웃 문구 출력
+		char buffer[20]{ "[ TIME OUT... ]" };
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::Red);
+	}
+	else
+	{
+		// 스테이지 남은 제한 시간 출력
+		PrintTimeLimit();
+	}
 
 	// 클리어까지 남은 스코어 출력
-	PrintScore();
+	PrintRemainingScore();
 }
 
 bool GameLevel::CanMove(class Actor* inActor, const Vector2& currentPosition, const Vector2& nextPosition)
@@ -313,26 +334,39 @@ void GameLevel::ReadStageFile(const char* fileName)
 	fclose(mapFile);
 }
 
-void GameLevel::PrintScore()
+void GameLevel::PrintRemainingScore()
 {
-	char buffer1[20]{};
-	char buffer2[20]{};
-	sprintf_s(buffer1, 20, "현재 점수: %d", currentScore);
-	sprintf_s(buffer2, 20, "남은 점수: %d", remainingScore);
+	char buffer[20]{};
+	sprintf_s(buffer, 20, "남은 점수: %d", remainingScore);
 
-	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 1), buffer1, currentScore > 0 ? Color::Green : Color::White);
-	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 2), buffer2, Color::White);
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 2), buffer, Color::White);
+}
+
+void GameLevel::PrintTimeLimit()
+{
+	char buffer[50]{};
+	sprintf_s(buffer, 20, "남은 시간: %.3f", timeLimit);
+
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::White);
 }
 
 void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 {
 	// 점수 처리
-	currentScore++;
+	remainingScore--;
 	inScore->SetSortingOrder(SortingOrder::None);
 
-	// 아이템 발동 처리
-	// 15% 확률로 아이템 발동
+	// 점수 획득 관련 확률 이벤트
 	int itemActivation = Utils::Random(1, 100);
+
+	// 30% 확률로 제한 시간 1초 증가
+	if (itemActivation <= 30)
+	{
+		timeLimit += 1;
+		AddActor(new AddTimeLimitEffect("+1", Vector2(stagePos.x + 13, stagePos.y - 1)));
+	}
+
+	// 20% 확률로 아이템 발동
 	if (itemActivation <= 15)
 	{
 		Player* player = inPlayer->As<Player>();
@@ -364,7 +398,7 @@ void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 	inScore->Destroy();
 
 	// 게임 클리어 여부 확인
-	if (currentScore == remainingScore)
+	if (remainingScore <= 0)
 	{
 		IsStageClear = true;
 	}
@@ -382,6 +416,10 @@ void GameLevel::ProcessPlayerAndEnemy(Actor* inPlayer, Actor* inEnemy)
 	if (player->GetEnableSuperMode())
 	{
 		inEnemy->Destroy();
+
+		// 제한 시간 5초 증가
+		timeLimit += 5;
+		AddActor(new AddTimeLimitEffect("+5", Vector2(stagePos.x + 13, stagePos.y - 1)));
 	}
 	else
 	{

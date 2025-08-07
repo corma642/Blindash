@@ -18,7 +18,7 @@ public:
 	void ToggleOptionMenu();
 
 	// 스테이지 선택 함수
-	void ChangeSelectStageMenu(int stageNumber);
+	void ChangeSelectStageMenu(const int stageNumber, const float timeLimit);
 
 	// 게임 오버 시, 수행할 로직
 	virtual void OnGameOver() override;

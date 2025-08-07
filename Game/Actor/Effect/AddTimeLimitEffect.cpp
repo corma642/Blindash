@@ -1,26 +1,15 @@
-#include "ExpandVisionEffect.h"
+#include "AddTimeLimitEffect.h"
 
 // 효과 재생에 사용할 문자열 시퀀스 (일종의 애니메이션 프레임).
-static const ExpandVisionEffectFrame sequence[] =
+static const AddTimeLimitEffectFrame sequence[] =
 {
-	ExpandVisionEffectFrame("o", 0.01f, Color::Blue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Red),
-	ExpandVisionEffectFrame("o", 0.01f, Color::SkyBlue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Violet),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Yellow),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Blue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Red),
-	ExpandVisionEffectFrame("o", 0.01f, Color::SkyBlue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Violet),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Yellow),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
+	AddTimeLimitEffectFrame("+1", 0.1f, Color::Green),
+	AddTimeLimitEffectFrame("+1", 0.05f, Color::Red),
+	AddTimeLimitEffectFrame("+1", 0.1f, Color::Green),
 };
 
-ExpandVisionEffect::ExpandVisionEffect(const Vector2& position)
-	: Actor(sequence[0].frame, Color::Green, position)
+AddTimeLimitEffect::AddTimeLimitEffect(const char* frameChar, const Vector2& position)
+	: Actor(frameChar, Color::Green, position)
 {
 	// 애니메이션 시퀀스 개수 구하기
 	effectSequenceCount = sizeof(sequence) / sizeof(sequence[0]);
@@ -35,7 +24,7 @@ ExpandVisionEffect::ExpandVisionEffect(const Vector2& position)
 	sortingOrder = SortingOrder::Effect;
 }
 
-void ExpandVisionEffect::Tick(float deltaTime)
+void AddTimeLimitEffect::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
 

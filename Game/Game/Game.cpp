@@ -60,7 +60,7 @@ void Game::ToggleOptionMenu()
 	}
 }
 
-void Game::ChangeSelectStageMenu(int stageNumber)
+void Game::ChangeSelectStageMenu(const int stageNumber, const float timeLimit)
 {
 	if (showOptionMenu)
 	{
@@ -68,7 +68,7 @@ void Game::ChangeSelectStageMenu(int stageNumber)
 	}
 
 	// 게임 레벨 추가 후 레벨 전환 요청
-	gameLevel = new GameLevel(stageNumber);
+	gameLevel = new GameLevel(stageNumber, timeLimit);
 	ChangeLevel(gameLevel);
 
 	// 옵션 레벨 생성

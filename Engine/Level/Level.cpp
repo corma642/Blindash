@@ -2,7 +2,6 @@
 #include "Actor\Actor.h"
 #include "Utils/Utils.h"
 #include "Engine.h"
-//#include "..\Game\Actor\Effect\ExpandVisionEffect.h"
 
 #include <algorithm>
 #include <vector>
@@ -151,7 +150,7 @@ bool Level::StageClear()
 
 bool Level::GameOver()
 {
-	return isPlayerDead;
+	return isPlayerDead || isTimeOut;
 }
 
 bool Level::ShouldRenderActor(Actor* inActor)
