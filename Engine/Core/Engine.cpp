@@ -26,6 +26,9 @@ Engine::Engine()
 {
 	instance = this;
 
+	// 게임 제목 출력
+	SetConsoleTitleA("Blindash");
+
 	// 콘솔 커서 정보
 	CONSOLE_CURSOR_INFO info;
 	info.bVisible = FALSE; // 보기 끄기
@@ -110,11 +113,6 @@ void Engine::Run()
 			BeginPlay();
 			Tick(deltaTime);
 			Render();
-
-			// 제목에 FPS 출력하기
-			char title[50]{};
-			sprintf_s(title, 50, "FPS: %f", (1.0f / deltaTime));
-			SetConsoleTitleA(title);
 
 			// 시간 업데이트
 			previousTime = currentTime;

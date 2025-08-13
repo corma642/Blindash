@@ -34,10 +34,10 @@ private:
 	// 플레이중인 게임 레벨
 	Level* gameLevel = nullptr;
 
-	// 현재 메인 메뉴 레벨을 보여주고있는지 확인하는 함수
+	// 현재 메인 메뉴 레벨을 보여주고 있는지 확인하는 함수
 	bool showMainMenu = false;
 
-	// 현재 옵션 레벨을 보여주고있는지 확인하는 함수
+	// 현재 옵션 레벨을 보여주고 있는지 확인하는 함수
 	bool showOptionMenu = false;
 
 	static Game* instance;
