@@ -5,7 +5,7 @@ static const AddTimeLimitEffectFrame sequence[] =
 {
 	AddTimeLimitEffectFrame("+1", 0.05f, Color::Green),
 	AddTimeLimitEffectFrame("+1", 0.05f, Color::Red),
-	AddTimeLimitEffectFrame("+1", 0.1f, Color::Green),
+	AddTimeLimitEffectFrame("+1", 0.05f, Color::Green),
 };
 
 AddTimeLimitEffect::AddTimeLimitEffect(const char* frameChar, const Vector2& position)
