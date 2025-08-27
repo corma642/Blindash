@@ -3,13 +3,13 @@
 // 효과 재생에 사용할 문자열 시퀀스 (일종의 애니메이션 프레임).
 static const ScoreDestroyEffectFrame sequence[] =
 {
-	ScoreDestroyEffectFrame(".", 0.15f, Color::Green),
-	ScoreDestroyEffectFrame(".", 0.15f, Color::Yellow),
-	ScoreDestroyEffectFrame(".", 0.15f, Color::SkyBlue),
+	ScoreDestroyEffectFrame(".", 0.15f, Color::LightGreen),
+	ScoreDestroyEffectFrame(".", 0.15f, Color::LightYellow),
+	ScoreDestroyEffectFrame(".", 0.15f, Color::LightSkyBlue),
 };
 
 ScoreDestroyEffect::ScoreDestroyEffect(const Vector2& position)
-	: Actor(sequence[0].frame, Color::Green, position)
+	: Actor(sequence[0].frame, Color::LightGreen, position)
 {
 	// 애니메이션 시퀀스 개수 구하기
 	effectSequenceCount = sizeof(sequence) / sizeof(sequence[0]);

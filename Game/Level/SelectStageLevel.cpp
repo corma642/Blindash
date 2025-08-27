@@ -116,7 +116,7 @@ void SelectStageLevel::PrintBackGround()
 
 	for (int i = 0; i < 30; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(0, i), buffer[i], Color::Blue);
+		Engine::Get().WriteToBuffer(Vector2(0, i), buffer[i], Color::LightBlue);
 	}
 
 
@@ -126,7 +126,7 @@ void SelectStageLevel::PrintBackGround()
 
 	for (int i = 0; i < 1; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(24, 1), buffer2[i], Color::White);
+		Engine::Get().WriteToBuffer(Vector2(24, 1), buffer2[i], Color::LightWhite);
 	}
 
 	char buffer3[1][100]{
@@ -135,7 +135,7 @@ void SelectStageLevel::PrintBackGround()
 
 	for (int i = 0; i < 1; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(21, 2), buffer3[i], Color::Green);
+		Engine::Get().WriteToBuffer(Vector2(21, 2), buffer3[i], Color::LightGreen);
 	}
 
 }

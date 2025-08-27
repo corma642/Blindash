@@ -145,7 +145,7 @@ void Engine::Run()
 
 	// 게임 루프 종료 후, 정리
 	// 콘솔 텍스트를 흰색으로 변경
-	Utils::SetConsoleTextColor(Color::White);
+	Utils::SetConsoleTextColor(Color::LightWhite);
 }
 
 void Engine::WriteToBuffer(const Vector2& position, const char* image, Color color, int sortingOrder)

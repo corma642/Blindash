@@ -64,7 +64,7 @@ public:
 	void WriteToBuffer(
 		const Vector2& position,
 		const char* image,
-		Color color = Color::White,
+		Color color = Color::LightWhite,
 		int sortingOrder = 0
 	);
 

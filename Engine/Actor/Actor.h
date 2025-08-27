@@ -31,7 +31,7 @@ class ENGINE_API Actor : public RTTI
 public:
 	Actor(
 		const char* image = "",
-		Color color = Color::White,
+		Color color = Color::LightWhite,
 		const Vector2& position = Vector2::Zero
 	);
 

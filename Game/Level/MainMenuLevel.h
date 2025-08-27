@@ -43,7 +43,6 @@ public:
 	virtual void Render() override;
 
 private:
-	//void PrintGameName();
 	void PrintGameName2();
 
 private:
@@ -51,10 +50,10 @@ private:
 	int currentIndex = 0;
 
 	// 아이템 선택 색상
-	Color selectedColor = Color::Green;
+	Color selectedColor = Color::LightGreen;
 
 	// 아이템 선택 안됐을 때 색상
-	Color unSelectedColor = Color::White;
+	Color unSelectedColor = Color::LightWhite;
 
 	// 아이템 배열
 	std::vector<MainMenuItem*> items;

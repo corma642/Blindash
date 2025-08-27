@@ -71,138 +71,6 @@ void MainMenuLevel::Render()
 	Engine::Get().WriteToBuffer(Vector2(39, 10), items[1]->menuText, textColor);
 }
 
-//void MainMenuLevel::PrintGameName()
-//{
-//	char gameLogo[30][100]{
-//		{ "8888888888888888888888888888888888888888888888888888888888888888888" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "88                                                               88" },
-//		{ "8888888888888888888888888888888888888888888888888888888888888888888" }
-//	};
-//
-//	for (int i = 0; i < 30; ++i)
-//	{
-//		Engine::Get().WriteToBuffer(Vector2(0, i), gameLogo[i], Color::Blue);
-//	}
-//
-//
-//	char menuLogoN[10][100]{
-//		{ "                                                  ##    ##" },
-//		{ "                                                  ###   ##" },
-//		{ "                                                  ####  ##" },
-//		{ "                                                  ## ## ##" },
-//		{ "                                                  ##  ####" },
-//		{ "                                                  ##   ###" },
-//		{ "                                                  ##    ##" },
-//		{ "                                                  ##     #" },
-//	};
-//
-//	for (int i = 0; i < 10; ++i)
-//	{
-//		Engine::Get().WriteToBuffer(Vector2(2, i + 3), menuLogoN[i], Color::Red);
-//	}
-//
-//
-//	char menuLogoA2[10][100]{
-//		{ "                                           ##### " },
-//		{ "                                          #######" },
-//		{ "                                          ##   ##" },
-//		{ "                                          #######" },
-//		{ "                                          #######" },
-//		{ "                                          ##   ##" },
-//		{ "                                          ##   ##" },
-//		{ "                                          ##   ##" },
-//	};
-//
-//	for (int i = 0; i < 10; ++i)
-//	{
-//		Engine::Get().WriteToBuffer(Vector2(2, i + 3), menuLogoA2[i], Color::Green);
-//	}
-//
-//
-//	char menuLogoM[10][100]{
-//		{ "                               ##   ##   " },
-//		{ "                              ###  ####  " },
-//		{ "                              #### ##### " },
-//		{ "                              ## ####### " },
-//		{ "                              ##  ### ###" },
-//		{ "                              ##   ##  ##" },
-//		{ "                              ##   ##  ##" },
-//		{ "                              ##        #" },
-//	};
-//
-//	for (int i = 0; i < 10; ++i)
-//	{
-//		Engine::Get().WriteToBuffer(Vector2(2, i + 3), menuLogoM[i], Color::Yellow);
-//	}
-//
-//
-//	char menuLogoC[10][100]{
-//		{ "                     #####  " },
-//		{ "                    ####### " },
-//		{ "                    ##   ## " },
-//		{ "                    ##      " },
-//		{ "                    ##      " },
-//		{ "                    ##   ## " },
-//		{ "                     #######" },
-//		{ "                      ##### " },
-//	};
-//
-//	for (int i = 0; i < 10; ++i)
-//	{
-//		Engine::Get().WriteToBuffer(Vector2(2, i + 3), menuLogoC[i], Color::Violet);
-//	}
-//
-//
-//	char menuLogoA1[10][100]{
-//		{ "             ##### " },
-//		{ "            #######" },
-//		{ "            ##   ##" },
-//		{ "            #######" },
-//		{ "            #######" },
-//		{ "            ##   ##" },
-//		{ "            ##   ##" },
-//		{ "             #   # " },
-//	};
-//
-//	for (int i = 0; i < 10; ++i)
-//	{
-//		Engine::Get().WriteToBuffer(Vector2(2, i + 3), menuLogoA1[i], Color::Red);
-//	}
-//
-//
-//	char menuLogoP[10][100]{
-//		{ "     ##### " },
-//		{ "    #######" },
-//		{ "    ##   ##" },
-//		{ "    #######" },
-//		{ "    ###### " },
-//		{ "    ##     " },
-//		{ "    ##     " },
-//		{ "     #     " },
-//	};
-//
-//	for (int i = 0; i < 10; ++i)
-//	{
-//		Engine::Get().WriteToBuffer(Vector2(2, i + 3), menuLogoP[i], Color::Blue);
-//	}
-//}
-
 void MainMenuLevel::PrintGameName2()
 {
 	char gameLogo[30][100]{
@@ -226,7 +94,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 30; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(0, i), gameLogo[i], Color::Blue);
+		Engine::Get().WriteToBuffer(Vector2(0, i), gameLogo[i], Color::LightBlue);
 	}
 
 	char menuLogoH[10][100]{
@@ -238,7 +106,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoH[i], Color::Green);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoH[i], Color::LightGreen);
 	}
 
 	char menuLogoS[10][100]{
@@ -250,7 +118,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoS[i], Color::SkyBlue);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoS[i], Color::LightSkyBlue);
 	}
 
 
@@ -263,7 +131,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoA[i], Color::Red);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoA[i], Color::LightRed);
 	}
 
 
@@ -276,7 +144,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoD[i], Color::Yellow);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoD[i], Color::LightYellow);
 	}
 
 
@@ -289,7 +157,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoN[i], Color::Violet);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoN[i], Color::LightViolet);
 	}
 
 
@@ -302,7 +170,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoI[i], Color::Blue);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoI[i], Color::LightBlue);
 	}
 
 
@@ -315,7 +183,7 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoL[i], Color::Green);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoL[i], Color::LightGreen);
 	}
 
 
@@ -328,6 +196,6 @@ void MainMenuLevel::PrintGameName2()
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoB[i], Color::Red);
+		Engine::Get().WriteToBuffer(Vector2(2, i + 2), menuLogoB[i], Color::LightRed);
 	}
 }

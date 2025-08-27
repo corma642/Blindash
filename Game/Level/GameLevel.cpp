@@ -63,27 +63,27 @@ void GameLevel::Render()
 	{
 		// 스테이지 클리어 문구 출력
 		char buffer1[25]{ "[ !- GAME CLEAR -! ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 2), buffer1, Color::Green);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 2), buffer1, Color::LightGreen);
 
 		// 다음 스테이지 바로가기 문구 출력
 		char buffer2[50]{ "[ 다음 스테이지 바로가기 >> \"Enter\" ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 1), buffer2, Color::White);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 1), buffer2, Color::LightWhite);
 
 		// 메인 메뉴로 가기 문구 출력
 		char buffer3[50]{ "[ 메인 메뉴로 가기 >> \"ESC\" ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 0), buffer3, Color::White);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y - 0), buffer3, Color::LightWhite);
 	}
 	else if (isPlayerDead)
 	{
 		// 게임 오버 문구 출력
 		char buffer[20]{ "[ YOU DIED... ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::Red);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::LightRed);
 	}
 	else if (isTimeOut)
 	{
 		// 타임 아웃 문구 출력
 		char buffer[20]{ "[ TIME OUT... ]" };
-		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::Red);
+		Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::LightRed);
 	}
 	else
 	{
@@ -339,7 +339,7 @@ void GameLevel::PrintRemainingScore()
 	char buffer[20]{};
 	sprintf_s(buffer, 20, "남은 점수: %d", remainingScore);
 
-	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 2), buffer, Color::White);
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, 2), buffer, Color::LightWhite);
 }
 
 void GameLevel::PrintTimeLimit()
@@ -347,7 +347,7 @@ void GameLevel::PrintTimeLimit()
 	char buffer[50]{};
 	sprintf_s(buffer, 50, "남은 시간: %.3f", timeLimit);
 
-	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::White);
+	Engine::Get().WriteToBuffer(Vector2(stagePos.x + 2, stagePos.y), buffer, Color::LightWhite);
 }
 
 void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)

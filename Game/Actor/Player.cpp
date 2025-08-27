@@ -8,7 +8,7 @@
 #include <iostream>
 
 Player::Player(const Vector2& position)
-	: super("D", Color::Yellow, position)
+	: super("D", Color::LightYellow, position)
 {
 	SetSortingOrder(SortingOrder::Player);
 
@@ -74,7 +74,7 @@ void Player::ItemActivateSuperMode(float deltaTime)
 		SuperModeTimer.SetTargetTime(SuperModeTime);
 		bStartSuperMode = false;
 		bEnableSuperMode = true;
-		SetColor(Color::Green);
+		SetColor(Color::LightGreen);
 
 		Level* OwningLevel = GetOwner();
 		if (!OwningLevel)
@@ -93,7 +93,7 @@ void Player::ItemActivateSuperMode(float deltaTime)
 		{
 			SuperModeTimer.Reset();
 			bEnableSuperMode = false;
-			SetColor(Color::Yellow);
+			SetColor(Color::LightYellow);
 
 			Level* OwningLevel = GetOwner();
 			if (!OwningLevel)

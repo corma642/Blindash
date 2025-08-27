@@ -3,24 +3,24 @@
 // 효과 재생에 사용할 문자열 시퀀스 (일종의 애니메이션 프레임).
 static const ExpandVisionEffectFrame sequence[] =
 {
-	ExpandVisionEffectFrame("o", 0.01f, Color::Blue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Red),
-	ExpandVisionEffectFrame("o", 0.01f, Color::SkyBlue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Violet),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Yellow),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Blue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Red),
-	ExpandVisionEffectFrame("o", 0.01f, Color::SkyBlue),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Violet),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Yellow),
-	ExpandVisionEffectFrame("o", 0.01f, Color::Green),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightBlue),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightGreen),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightRed),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightSkyBlue),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightViolet),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightYellow),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightGreen),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightBlue),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightGreen),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightRed),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightSkyBlue),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightViolet),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightYellow),
+	ExpandVisionEffectFrame("o", 0.01f, Color::LightGreen),
 };
 
 ExpandVisionEffect::ExpandVisionEffect(const Vector2& position)
-	: Actor(sequence[0].frame, Color::Green, position)
+	: Actor(sequence[0].frame, Color::LightGreen, position)
 {
 	// 애니메이션 시퀀스 개수 구하기
 	effectSequenceCount = sizeof(sequence) / sizeof(sequence[0]);

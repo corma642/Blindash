@@ -6,7 +6,7 @@
 // 애니메이션 이펙트 프레임 구조체.
 struct ExpandVisionEffectFrame
 {
-	ExpandVisionEffectFrame(const char* frame, float playTime = 0.05f, Color color = Color::Green)
+	ExpandVisionEffectFrame(const char* frame, float playTime = 0.05f, Color color = Color::LightGreen)
 		: playTime(playTime), color(color)
 	{
 		// 문자열 설정.
@@ -27,7 +27,7 @@ struct ExpandVisionEffectFrame
 	float playTime = 0.0f;
 
 	// 이펙트 색상 
-	Color color = Color::White;
+	Color color = Color::LightWhite;
 };
 
 class ExpandVisionEffect : public Actor
