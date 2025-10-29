@@ -26,21 +26,29 @@ public:
 	void ItemActivateSuperMode(float deltaTime);
 
 private:
-	// 이동 입력 처리
+	// 이동 입력 처리 함수
 	void PlayerMovement(float deltaTime);
 
-	// 수평 이동 (X축) / sign true = +, false = -
+	/*
+	* 수평 이동 (X축) 함수
+	* sign:	true = 오른쪽(+), false = 왼쪽(-)
+	* isRepeat: 연속 이동 여부
+	*/
 	void HorizontalMove(bool sign, bool isRepeat);
 
-	// 수직 이동 (Y축) / sign true = +, false = -
+	/*
+	* 수직 이동 (Y축) 함수
+	* sign:	true = 아래쪽(+), false = 위쪽(-)
+	* isRepeat: 연속 이동 여부
+	*/
 	void VerticalMove(bool sign, bool isRepeat);
 
 private:
-	// 반복/연속 이동 타이머
+	// 반복/연속 이동 타이머 (X축과 Y축 별도)
 	Timer playerRepeatMoveXTimer;
 	Timer playerRepeatMoveYTimer;
 
-	// 반복/연속 이동 임계값
+	// 반복/연속 이동 임계값 (지연 시간)
 	float xMoveThreshold = 0.1f;
 	float yMoveThreshold = 0.2f;
 

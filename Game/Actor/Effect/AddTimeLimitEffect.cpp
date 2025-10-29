@@ -1,6 +1,6 @@
 #include "AddTimeLimitEffect.h"
 
-// 효과 재생에 사용할 문자열 시퀀스 (일종의 애니메이션 프레임).
+// 효과 재생에 사용할 문자열 시퀀스 (일종의 애니메이션 프레임)
 static const AddTimeLimitEffectFrame sequence[] =
 {
 	AddTimeLimitEffectFrame("+1", 0.05f, Color::LightGreen),
@@ -14,10 +14,10 @@ AddTimeLimitEffect::AddTimeLimitEffect(const char* frameChar, const Vector2& pos
 	// 애니메이션 시퀀스 개수 구하기
 	effectSequenceCount = sizeof(sequence) / sizeof(sequence[0]);
 
-	// 다음 애니메이션까지 대기할 시간.
+	// 다음 애니메이션까지 대기할 시간
 	timer.SetTargetTime(sequence[0].playTime);
 
-	// 색상 설정.
+	// 색상 설정
 	color = sequence[0].color;
 
 	// 정렬 순서 설정
@@ -35,27 +35,27 @@ void AddTimeLimitEffect::Tick(float deltaTime)
 		return;
 	}
 
-	// 애니메이션 재생 끝났는지 확인.
-	// 끝났으면 삭제.
+	// 애니메이션 재생 끝났는지 확인
+	// 끝났으면 삭제
 	if (currentSequenceIndex == effectSequenceCount - 1)
 	{
 		Destroy();
 		return;
 	}
 
-	// 프레임 업데이트.
+	// 프레임 업데이트
 	++currentSequenceIndex;
 	timer.Reset();
 
-	// 다음 시퀀스에서 재생할 시간으로 타이머 재설정.
+	// 다음 시퀀스에서 재생할 시간으로 타이머 재설정
 	timer.SetTargetTime(sequence[currentSequenceIndex].playTime);
 
-	// 액터의 기존 이미지 제거.
+	// 액터의 기존 이미지 제거
 	SafeDelete(image);
 
-	// 애니메이션 프레임에 사용할 문자열을 액터에 복사.
+	// 애니메이션 프레임에 사용할 문자열을 액터에 복사
 	ChangeImage(sequence[currentSequenceIndex].frame);
 
-	// 색상 설정.
+	// 색상 설정
 	color = sequence[currentSequenceIndex].color;
 }

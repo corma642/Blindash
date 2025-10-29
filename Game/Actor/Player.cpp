@@ -12,7 +12,7 @@ Player::Player(const Vector2& position)
 {
 	SetSortingOrder(SortingOrder::Player);
 
-	// 타이머 설정 (반복/연속 이동 제한 시간 설정)
+	// 반복 이동 타이머 목표 시간 설정
 	playerRepeatMoveXTimer.SetTargetTime(xMoveThreshold);
 	playerRepeatMoveYTimer.SetTargetTime(yMoveThreshold);
 }
@@ -60,46 +60,51 @@ void Player::ItemExpandVisionRange()
 
 void Player::ItemActivateSuperMode(float deltaTime)
 {
-	// 슈퍼 모드 활성화 상태에서 추가 활성화
+	// 슈퍼 모드 활성화 요청이 있고 이미 활성화된 상태라면 타이머 리셋
 	if (bStartSuperMode && bEnableSuperMode)
 	{
-		// 지속 시간 초기화
-		SuperModeTimer.Reset();
-		bStartSuperMode = false;
+		SuperModeTimer.Reset();		// 지속 시간 재초기화
+		bStartSuperMode = false;	// 활성화 요청 플래그 초기화
 	}
 
-	// 슈퍼 모드 비활성화 상태에서 슈퍼 모드 활성화
+	// 슈퍼 모드 활성화 요청이 있고 비활성화 상태라면 슈퍼 모드 활성화
 	if (bStartSuperMode && !bEnableSuperMode)
 	{
-		SuperModeTimer.SetTargetTime(SuperModeTime);
-		bStartSuperMode = false;
-		bEnableSuperMode = true;
-		SetColor(Color::LightGreen);
+		SuperModeTimer.SetTargetTime(SuperModeTime);	// 타이머 목표 시간 설정
+		bStartSuperMode = false;						// 활성화 요청 플래그 초기화
+		bEnableSuperMode = true;						// 슈퍼 모드 활성화
+		SetColor(Color::LightGreen);					// 색상 변경 (슈퍼 모드 표시)
 
 		Level* OwningLevel = GetOwner();
 		if (!OwningLevel)
 		{
 			__debugbreak();
 		}
+
+		// 글로벌 비전 활성화 (시야 범위 전체로 확장)
 		OwningLevel->SetEnableGlobalVision(true);
 	}
 
-	// 슈퍼 모드 활성화
+	// 슈퍼 모드가 활성화된 상태라면 타이머 업데이트 및 만료 확인
 	if (bEnableSuperMode)
 	{
+		// 타이머 진행 (deltaTime만큼)
 		SuperModeTimer.Tick(deltaTime);
 
+		// 타이머 만료 시 (슈퍼 모드 지속시간 종료)
 		if (SuperModeTimer.IsTimeout())
 		{
-			SuperModeTimer.Reset();
-			bEnableSuperMode = false;
-			SetColor(Color::LightYellow);
+			SuperModeTimer.Reset();			// 타이머 리셋
+			bEnableSuperMode = false;		// 슈퍼 모드 비활성화
+			SetColor(Color::LightYellow);	// 색상 변경 (기본 상태 표시)
 
 			Level* OwningLevel = GetOwner();
 			if (!OwningLevel)
 			{
 				__debugbreak();
 			}
+
+			// 글로벌 비전 비활성화
 			OwningLevel->SetEnableGlobalVision(false);
 		}
 	}
@@ -107,58 +112,62 @@ void Player::ItemActivateSuperMode(float deltaTime)
 
 void Player::PlayerMovement(float deltaTime)
 {
+	// 왼쪽 이동 (A 또는 LEFT 키)
 	if (Input::Get().GetKeyDown('A') || Input::Get().GetKeyDown(VK_LEFT))
 	{
-		HorizontalMove(false, false);
+		HorizontalMove(false, false); // 초기 이동 (반복 아님)
 	}
-	else if (Input::Get().GetKey('A') || Input::Get().GetKeyDown(VK_LEFT))
+	else if (Input::Get().GetKey('A') || Input::Get().GetKey(VK_LEFT))  // GetKeyDown에서 GetKey로 수정 (지속 입력 확인)
 	{
-		playerRepeatMoveXTimer.Tick(deltaTime);
-		HorizontalMove(false, true);
+		playerRepeatMoveXTimer.Tick(deltaTime); // 타이머 업데이트
+		HorizontalMove(false, true); // 반복 이동
 	}
-	else if (Input::Get().GetKeyUp('A') || Input::Get().GetKeyDown(VK_LEFT))
+	else if (Input::Get().GetKeyUp('A') || Input::Get().GetKeyUp(VK_LEFT))  // GetKeyDown에서 GetKeyUp으로 수정 (키 떼기)
 	{
-		playerRepeatMoveXTimer.Reset();
+		playerRepeatMoveXTimer.Reset(); // 타이머 리셋
 	}
 
+	// 오른쪽 이동 (D 또는 RIGHT 키)
 	if (Input::Get().GetKeyDown('D') || Input::Get().GetKeyDown(VK_RIGHT))
 	{
-		HorizontalMove(true, false);
+		HorizontalMove(true, false); // 초기 이동
 	}
-	else if (Input::Get().GetKey('D') || Input::Get().GetKeyDown(VK_RIGHT))
+	else if (Input::Get().GetKey('D') || Input::Get().GetKey(VK_RIGHT))
 	{
-		playerRepeatMoveXTimer.Tick(deltaTime);
-		HorizontalMove(true, true);
+		playerRepeatMoveXTimer.Tick(deltaTime); // 타이머 업데이트
+		HorizontalMove(true, true); // 반복 이동
 	}
-	else if (Input::Get().GetKeyUp('D') || Input::Get().GetKeyDown(VK_RIGHT))
+	else if (Input::Get().GetKeyUp('D') || Input::Get().GetKeyUp(VK_RIGHT))
 	{
 		playerRepeatMoveXTimer.Reset();
 	}
 
+	// 위쪽 이동 (W 또는 UP 키)
 	if (Input::Get().GetKeyDown('W') || Input::Get().GetKeyDown(VK_UP))
 	{
-		VerticalMove(false, false);
+		VerticalMove(false, false); // 초기 이동
 	}
-	else if (Input::Get().GetKey('W') || Input::Get().GetKeyDown(VK_UP))
+	else if (Input::Get().GetKey('W') || Input::Get().GetKey(VK_UP))
 	{
-		playerRepeatMoveYTimer.Tick(deltaTime);
-		VerticalMove(false, true);
+		playerRepeatMoveYTimer.Tick(deltaTime); // 타이머 업데이트
+		VerticalMove(false, true); // 반복 이동
 	}
-	else if (Input::Get().GetKeyUp('W') || Input::Get().GetKeyDown(VK_UP))
+	else if (Input::Get().GetKeyUp('W') || Input::Get().GetKeyUp(VK_UP))
 	{
 		playerRepeatMoveYTimer.Reset();
 	}
 
+	// 아래쪽 이동 (S 또는 DOWN 키)
 	if (Input::Get().GetKeyDown('S') || Input::Get().GetKeyDown(VK_DOWN))
 	{
-		VerticalMove(true, false);
+		VerticalMove(true, false); // 초기 이동
 	}
-	else if (Input::Get().GetKey('S') || Input::Get().GetKeyDown(VK_DOWN))
+	else if (Input::Get().GetKey('S') || Input::Get().GetKey(VK_DOWN))
 	{
-		playerRepeatMoveYTimer.Tick(deltaTime);
-		VerticalMove(true, true);
+		playerRepeatMoveYTimer.Tick(deltaTime); // 타이머 업데이트
+		VerticalMove(true, true); // 반복 이동
 	}
-	else if (Input::Get().GetKeyUp('S') || Input::Get().GetKeyDown(VK_DOWN))
+	else if (Input::Get().GetKeyUp('S') || Input::Get().GetKeyUp(VK_DOWN))
 	{
 		playerRepeatMoveYTimer.Reset();
 	}
@@ -166,24 +175,29 @@ void Player::PlayerMovement(float deltaTime)
 
 void Player::HorizontalMove(bool sign, bool isRepeat)
 {
+	// 현재 위치 복사
 	Vector2 position = Position();
 
-	// 반복/연속 이동
+	// 반복 이동 시 타이머 확인
 	if (isRepeat)
 	{
 		if (!playerRepeatMoveXTimer.IsTimeout())
 		{
-			return;
+			return; // 이동 임곗값이 지나지 않았으면 않으면 이동 안 함
 		}
 
+		// 타이머(이동 임곗값) 리셋
 		playerRepeatMoveXTimer.Reset();
 	}
 
+	// X축 이동 적용
 	if (sign) position.x++;
 	else position.x--;
 
+	// 이동 가능 여부 확인
 	if (gameLevelInterface->CanMove(this, Position(), position))
 	{
+		// 위치 업데이트
 		SetPosition(position);
 
 		// 레벨의 플레이어 위치 갱신
@@ -195,22 +209,25 @@ void Player::VerticalMove(bool sign, bool isRepeat)
 {
 	Vector2 position = Position();
 
-	// 반복/연속 이동
+	// 반복 이동 시 타이머 확인
 	if (isRepeat)
 	{
 		if (!playerRepeatMoveYTimer.IsTimeout())
 		{
-			return;
+			return; // 이동 임곗값이 지나지 않았으면 않으면 이동 안 함
 		}
 
+		// 타이머(이동 임곗값) 리셋
 		playerRepeatMoveYTimer.Reset();
 	}
 
+	// Y축 이동 적용
 	if (sign) position.y++;
 	else position.y--;
 
 	if (gameLevelInterface->CanMove(this, Position(), position))
 	{
+		// 위치 업데이트
 		SetPosition(position);
 
 		// 레벨의 플레이어 위치 갱신

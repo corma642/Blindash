@@ -97,76 +97,83 @@ void GameLevel::Render()
 
 bool GameLevel::CanMove(class Actor* inActor, const Vector2& currentPosition, const Vector2& nextPosition)
 {
-	// 맵의 범위를 벗어나면 이동 실패
+	// 맵 범위를 벗어나면 이동 불가
 	if (nextPosition.x < 0 || nextPosition.y < 0 || nextPosition.x >= stagePos.x || nextPosition.y >= stagePos.y)
 	{
 		return false;
 	}
 
-	// 이 액터의 종류 확인
-	SortingOrder sortingOrder = SortingOrder::None;
-	sortingOrder = inActor->GetSortingOrder();
+	// 액터의 종류 확인
+	SortingOrder sortingOrder = inActor->GetSortingOrder();
 
-	// 플레이어의 이동
+	// 플레이어 이동 처리
 	if (sortingOrder == SortingOrder::Player)
 	{
 		for (const auto& i : actors)
 		{
+			// 다음 위치와 일치하지 않으면 스킵
 			if (i->Position() != nextPosition)
 			{
 				continue;
 			}
 
+			// 다음 위치의 액터 종류 확인
 			SortingOrder nextPosSortingOrder = i->GetSortingOrder();
 
+			// 종류에 따른 로직 처리
 			switch (nextPosSortingOrder)
 			{
 			case SortingOrder::Score:
-				ProcessPlayerAndScore(inActor, i);
-				return true;
+				ProcessPlayerAndScore(inActor, i);	// 플레이어와 점수 아이템 처리
+				return true;						// 이동 성공
 
 			case SortingOrder::Wall:
-				return false;
+				return false;						// 벽: 이동 불가
 
 			case SortingOrder::Enemy:
-				ProcessPlayerAndEnemy(inActor, i);
-				return false;
+				ProcessPlayerAndEnemy(inActor, i);	// 플레이어와 적 처리
+				return false;						// 적: 이동 불가 (처리 후)
 			}
 		}
 	}
 
-	// 적의 이동
+	// 적 이동 처리
 	if (sortingOrder == SortingOrder::Enemy)
 	{
 		for (const auto& i : actors)
 		{
+			// 다음 위치와 일치하지 않으면 스킵
 			if (i->Position() != nextPosition)
 			{
 				continue;
 			}
 
+			// 다음 위치의 액터 종류 확인
 			SortingOrder nextPosSortingOrder = i->GetSortingOrder();
+
+			// 시야가 가려진 경우 무시
 			if (nextPosSortingOrder == SortingOrder::Dark)
 			{
 				continue;
 			}
 
+			// 종류에 따른 로직 처리
 			switch (nextPosSortingOrder)
 			{
 			case SortingOrder::Wall:
-				return false;
+				return false;						// 벽: 이동 불가
 
 			case SortingOrder::Player:
-				ProcessPlayerAndEnemy(i, inActor);
-				return true;
+				ProcessPlayerAndEnemy(i, inActor);	// 적과 플레이어 처리 (순서 주의)
+				return true;						// 이동 성공 (처리 후)
 
 			default:
-				return true;
+				return true;						// 기타: 이동 가능
 			}
 		}
 	}
 
-	// 여기 왔다는 것은 빈 공간이라는 의미
+	// 빈 공간: 이동 가능
 	return true;
 }
 
@@ -208,39 +215,39 @@ void GameLevel::CalculateVisionRing()
 
 void GameLevel::ReadStageFile(const char* fileName)
 {
-	// 최종 에셋 경로 완성
+	// 파일 경로 생성
 	char filePath[256]{};
 	sprintf_s(filePath, 256, "../Assets/%s", fileName);
 
+	// 파일 열기
 	FILE* mapFile = nullptr;
 	fopen_s(&mapFile, filePath, "rt");
 
-	// 예외 처리
+	// 파일 열기 실패 시 디버그 브레이크
 	if (!mapFile)
 	{
 		__debugbreak();
 		return;
 	}
 
-	// 파싱(Parcing, 해석)
+	// 파일 크기 확인
 	fseek(mapFile, 0, SEEK_END);
 	size_t fileSize = ftell(mapFile);
 	rewind(mapFile);
 
-	// 확인한 파일 크기를 활용해 버퍼 할당
+	// 버퍼 할당 및 초기화
 	char* buffer = new char[fileSize + 1];
 	memset(buffer, 0, fileSize + 1);
-	size_t readSize = fread(buffer, sizeof(char), fileSize, mapFile);
 
-	// 문자열 길이
+	// 파일 내용 읽기
+	size_t readSize = fread(buffer, sizeof(char), fileSize, mapFile);
 	int size = static_cast<int>(readSize);
 
-	// 직사각형 경계 계산
+	// 맵 크기 계산 (너비와 높이)
 	int mapWidth = 0;
 	int mapHeight = 0;
 	int currentLineWidth = 0;
 
-	// 맵의 크기 계산
 	for (int i = 0; i < size; i++)
 	{
 		if (buffer[i] == '\n')
@@ -258,7 +265,7 @@ void GameLevel::ReadStageFile(const char* fileName)
 		}
 	}
 
-	// 마지막 줄 처리 (파일 끝에 개행이 없는 경우)
+	// 마지막 줄 처리 (개행 없이 끝나는 경우)
 	if (currentLineWidth > 0)
 	{
 		if (currentLineWidth > mapWidth)
@@ -268,17 +275,17 @@ void GameLevel::ReadStageFile(const char* fileName)
 		mapHeight++;
 	}
 
-	// 배열 순회를 위한 좌표 및 인덱스 변수
+	// 스테이지 위치 초기화
 	stagePos = Vector2(0, 0);
 	int index = 0;
 
-	// 문자 배열 순회
+	// 버퍼 순회하며 맵 파싱 및 액터 생성
 	while (index < size)
 	{
 		// 맵 문자 확인
 		char mapCharacter = buffer[index++];
 
-		// 개행 문자 처리
+		// 개행 문자 처리: 다음 줄로 이동
 		if (mapCharacter == '\n')
 		{
 			// 다음 줄로 넘기면서, x 좌표 초기화
@@ -287,7 +294,7 @@ void GameLevel::ReadStageFile(const char* fileName)
 			continue;
 		}
 
-		// 가장자리 판단 로직
+		// 가장자리 여부 판단
 		bool isTopEdge = (stagePos.y == 0);
 		bool isBottomEdge = (stagePos.y == mapHeight - 1);
 		bool isLeftEdge = (stagePos.x == 0);
@@ -295,37 +302,38 @@ void GameLevel::ReadStageFile(const char* fileName)
 
 		bool isEdge = isTopEdge || isBottomEdge || isLeftEdge || isRightEdge;
 
-		// 각 문자별 처리
+		// 문자에 따른 액터 생성
 		switch (mapCharacter)
 		{
-		case '8':
+		case '8': // 벽 생성
+			// 가장자리가 아니면 Dark 추가
 			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Wall(stagePos));
 			break;
 
-		case '.':
+		case '.': // 점수 생성
 			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Score(stagePos));
-			remainingScore++;
+			remainingScore++; // 남은 점수 증가
 			break;
 
-		case 'D':
+		case 'D': // 플레이어 생성
 			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Player(stagePos));
-			playerPos = stagePos;
+			playerPos = stagePos; // 플레이어 위치 저장
 			break;
 
-		case 'M':
+		case 'M': // 적 생성
 			if (!isEdge) AddActor(new Dark(stagePos));
 			AddActor(new Enemy(stagePos));
 			break;
 
-		case ' ':
+		case ' ': // 암흑 생성 (빈 공간)
 			if (!isEdge) AddActor(new Dark(stagePos));
 			break;
 		}
 
-		// x좌표 증가 처리
+		// X 좌표 증가
 		stagePos.x++;
 	}
 
@@ -352,21 +360,26 @@ void GameLevel::PrintTimeLimit()
 
 void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 {
-	// 점수 처리
+	// 남은 점수 감소
 	remainingScore--;
+
+	// 점수 액터의 정렬 순서 초기화 (제거 준비)
 	inScore->SetSortingOrder(SortingOrder::None);
 
-	// 점수 획득 관련 확률 이벤트
-	int itemActivation = Utils::Random(1, 100);
+	// 점수 획득 시 확률 이벤트 처리
+	int itemActivation = Utils::Random(1, 100); // 1~100 랜덤 값 생성
 
-	// 30% 확률로 제한 시간 1초 증가
+	// 30% 확률로 시간 제한 1초 증가
 	if (itemActivation <= 30)
 	{
+		// 시간 제한 증가
 		timeLimit += 1;
+
+		// 시간 증가 이펙트 생성 및 추가
 		AddActor(new AddTimeLimitEffect("+1", Vector2(stagePos.x + 13, stagePos.y - 1)));
 	}
 
-	// 20% 확률로 아이템 발동
+	// 15% 확률로 아이템 발동
 	if (itemActivation <= 15)
 	{
 		Player* player = inPlayer->As<Player>();
@@ -375,7 +388,7 @@ void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 			__debugbreak();
 		}
 
-		// 발동할 아이템 능력 랜덤 뽑기
+		// 아이템 타입 랜덤 선택 (1~5)
 		int itemType = Utils::Random(1, 5);
 
 		switch (itemType)
@@ -384,20 +397,21 @@ void GameLevel::ProcessPlayerAndScore(Actor* inPlayer, Actor* inScore)
 		case 2:
 		case 3:
 		case 4:
-			// 플레이어 시야 반경 증가
+			// 시야 반경 증가 아이템 발동 (80% 확률: 1~4)
 			player->ItemExpandVisionRange();
 			break;
 
 		case 5:
-			// 슈퍼 모드 활성화
+			// 슈퍼 모드 활성화 아이템 발동 (20% 확률)
 			player->StartSuperMode();
 			break;
 		}
 	}
 
+	// 점수 액터 파괴
 	inScore->Destroy();
 
-	// 게임 클리어 여부 확인
+	// 남은 점수가 0 이하이면 스테이지 클리어
 	if (remainingScore <= 0)
 	{
 		IsStageClear = true;
